@@ -1,6 +1,7 @@
 package model
 
 import (
+	"crypto/md5"
 	"crypto/sha256"
 	"crypto/sha512"
 	"encoding/hex"
@@ -22,10 +23,13 @@ func New() *Model {
 
 func (model *Model) DetectType(h string) (string, error) {
 	switch len(h) {
-	case sha256.BlockSize:
+	case md5.Size:
+		model.hasher = md5.New()
+		return "MD5", nil
+	case sha256.Size * 2:
 		model.hasher = sha256.New()
 		return "SHA-256", nil
-	case sha512.BlockSize:
+	case sha512.Size * 2:
 		model.hasher = sha512.New()
 		return "SHA-512", nil
 	default:
