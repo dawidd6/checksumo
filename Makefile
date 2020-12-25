@@ -1,15 +1,20 @@
-PREFIX = /usr/local
+PREFIX = /usr
 DESTDIR =
 PROGRAM = checksumo
 
 GOTK_TAG = gtk_3_22
 
 build:
-	go build -tags $(GOTK_TAG) -o $(PROGRAM)
+	glib-compile-resources --target=resources.h --generate-source data/data.gresource.xml
+	go build -mod=vendor -trimpath -tags $(GOTK_TAG) -v -o $(PROGRAM)
 
 test:
-	go test -tags $(GOTK_TAG) -v -count=1 ./...
+	go test -mod=vendor -tags $(GOTK_TAG) -v -count=1 ./...
 
 install: build
-	install -d $(DESTDIR)$(PREFIX)
-	install $(PROGRAM) $(DESTDIR)$(PREFIX)
+	install -d $(DESTDIR)$(PREFIX)/bin
+	install $(PROGRAM) $(DESTDIR)$(PREFIX)/bin
+	install -d $(DESTDIR)$(PREFIX)/share/applications
+	install data/$(PROGRAM).desktop $(DESTDIR)$(PREFIX)/share/applications
+	install -d $(DESTDIR)$(PREFIX)/share/icons/hicolor/scalable/apps
+	#install data/$(PROGRAM).svg $(DESTDIR)$(PREFIX)/share/icons/hicolor/scalable/apps

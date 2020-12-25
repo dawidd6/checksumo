@@ -36,7 +36,7 @@ func New(appID string) *View {
 	}
 
 	_, err = view.Application.Application.Connect("activate", func() {
-		builder, err := gtk.BuilderNewFromFile("ui.glade")
+		builder, err := gtk.BuilderNewFromResource("/data/ui.glade")
 		if err != nil {
 			log.Fatal(err)
 		}

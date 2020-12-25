@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Version=1.0
+Name=checksumo
+Exec=checksumo
+Icon=checksumo
+Terminal=false
+Categories=Utils;
+StartupNotify=false
