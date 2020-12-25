@@ -2,6 +2,7 @@ package view
 
 import (
 	"log"
+        "reflect"
 
 	"github.com/gotk3/gotk3/glib"
 	"github.com/gotk3/gotk3/gtk"
@@ -9,7 +10,7 @@ import (
 
 type View struct {
 	Application       *gtk.Application
-	ApplicationWindow *gtk.ApplicationWindow
+	ApplicationWindow *gtk.ApplicationWindow `gtk:"main_window"` // TODO
 	VerifyButton      *gtk.Button
 	HashEntry         *gtk.Entry
 	FileButton        *gtk.FileChooserButton
@@ -21,7 +22,8 @@ type View struct {
 	StatusFailImage   *gtk.Image
 	HashLabel         *gtk.Label
 	AboutButton       *gtk.ModelButton
-	signals           map[string]interface{}
+
+	signals map[string]interface{}
 }
 
 func New(appID string) *View {
@@ -43,77 +45,21 @@ func New(appID string) *View {
 
 		builder.ConnectSignals(view.signals)
 
-		obj, err := builder.GetObject("main_window")
-		if err != nil {
-			log.Fatal(err)
-		}
-		view.ApplicationWindow = obj.(*gtk.ApplicationWindow)
+                viewStruct := reflect.ValueOf(&view).Elem()
+	        for i := 0; i < viewStruct.NumField(); i++ {
+		    field := viewStruct.Field(i)
+		    widget := viewStruct.Type().Field(i).Tag.Get("gtk")
+		    if widget == "" {
+			continue
+		    }
 
-		obj, err = builder.GetObject("hash_entry")
-		if err != nil {
+		    obj, err := builder.GetObject(widget)
+		    if err != nil {
 			log.Fatal(err)
-		}
-		view.HashEntry = obj.(*gtk.Entry)
+		    }
 
-		obj, err = builder.GetObject("file_button")
-		if err != nil {
-			log.Fatal(err)
-		}
-		view.FileButton = obj.(*gtk.FileChooserButton)
-
-		obj, err = builder.GetObject("verify_button")
-		if err != nil {
-			log.Fatal(err)
-		}
-		view.VerifyButton = obj.(*gtk.Button)
-
-		obj, err = builder.GetObject("verifying_spinner")
-		if err != nil {
-			log.Fatal(err)
-		}
-		view.VerifyingSpinner = obj.(*gtk.Spinner)
-
-		obj, err = builder.GetObject("error_dialog")
-		if err != nil {
-			log.Fatal(err)
-		}
-		view.ErrorDialog = obj.(*gtk.MessageDialog)
-
-		obj, err = builder.GetObject("about_dialog")
-		if err != nil {
-			log.Fatal(err)
-		}
-		view.AboutDialog = obj.(*gtk.AboutDialog)
-
-		obj, err = builder.GetObject("status_stack")
-		if err != nil {
-			log.Fatal(err)
-		}
-		view.StatusStack = obj.(*gtk.Stack)
-
-		obj, err = builder.GetObject("status_ok_image")
-		if err != nil {
-			log.Fatal(err)
-		}
-		view.StatusOkImage = obj.(*gtk.Image)
-
-		obj, err = builder.GetObject("status_fail_image")
-		if err != nil {
-			log.Fatal(err)
-		}
-		view.StatusFailImage = obj.(*gtk.Image)
-
-		obj, err = builder.GetObject("hash_label")
-		if err != nil {
-			log.Fatal(err)
-		}
-		view.HashLabel = obj.(*gtk.Label)
-
-		obj, err = builder.GetObject("about_button")
-		if err != nil {
-			log.Fatal(err)
-		}
-		view.AboutButton = obj.(*gtk.ModelButton)
+		    field.Set(reflect.ValueOf(obj).Convert(field.Type()))
+	        }
 
 		view.ApplicationWindow.ShowAll()
 		view.Application.AddWindow(view.ApplicationWindow)
