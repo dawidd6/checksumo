@@ -1,3 +1,5 @@
+# github.com/davecgh/go-spew v1.1.0
+github.com/davecgh/go-spew/spew
 # github.com/gotk3/gotk3 v0.5.1
 ## explicit
 github.com/gotk3/gotk3/cairo
@@ -5,3 +7,10 @@ github.com/gotk3/gotk3/gdk
 github.com/gotk3/gotk3/glib
 github.com/gotk3/gotk3/gtk
 github.com/gotk3/gotk3/pango
+# github.com/pmezard/go-difflib v1.0.0
+github.com/pmezard/go-difflib/difflib
+# github.com/stretchr/testify v1.6.1
+## explicit
+github.com/stretchr/testify/assert
+# gopkg.in/yaml.v3 v3.0.0-20200313102051-9f266ea9e77c
+gopkg.in/yaml.v3
