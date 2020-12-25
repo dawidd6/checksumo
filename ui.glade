@@ -97,6 +97,7 @@
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="width_chars">64</property>
+            <signal name="activate" handler="on_hash_entry_activate" swapped="no"/>
             <signal name="changed" handler="on_hash_entry_changed" swapped="no"/>
           </object>
           <packing>

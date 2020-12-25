@@ -24,6 +24,7 @@ func New(v *view.View, m *model.Model) *Controller {
 	signals := map[string]interface{}{
 		"on_file_button_file_set":    controller.onFileButtonFileSet,
 		"on_hash_entry_changed":      controller.onHashEntryChanged,
+		"on_hash_entry_activate":     controller.onHashEntryActivate,
 		"on_verify_button_clicked":   controller.onVerifyButtonClicked,
 		"on_settings_button_clicked": controller.onSettingsButtonClicked,
 	}
@@ -45,6 +46,10 @@ func (controller *Controller) onFileButtonFileSet() {
 func (controller *Controller) onHashEntryChanged() {
 	controller.View.HashLabel.SetText("")
 	controller.View.StatusStack.SetVisibleChild(controller.View.VerifyButton)
+}
+
+func (controller *Controller) onHashEntryActivate() {
+	controller.onVerifyButtonClicked()
 }
 
 func (controller *Controller) onVerifyButtonClicked() {
