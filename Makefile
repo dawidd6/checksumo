@@ -2,7 +2,7 @@ PREFIX = /usr/local
 DESTDIR =
 PROGRAM = checksumo
 
-GTK_TAG = gtk_3_22
+GOTK_TAG = gtk_3_22
 
 build:
 	go build -tags $(GOTK_TAG) -o $(PROGRAM)
