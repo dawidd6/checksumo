@@ -106,61 +106,92 @@
           </packing>
         </child>
         <child>
-          <object class="GtkStack" id="status_stack">
+          <object class="GtkBox">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
-            <property name="halign">end</property>
-            <property name="transition_type">crossfade</property>
             <child>
-              <object class="GtkButton" id="verify_button">
-                <property name="label" translatable="yes">Verify</property>
+              <object class="GtkStack" id="status_stack">
                 <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="receives_default">True</property>
+                <property name="can_focus">False</property>
                 <property name="halign">end</property>
-                <signal name="clicked" handler="on_verify_button_clicked" object="verifying_spinner" swapped="no"/>
+                <property name="transition_type">crossfade</property>
+                <child>
+                  <object class="GtkButton" id="verify_button">
+                    <property name="label" translatable="yes">Verify</property>
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="receives_default">True</property>
+                    <property name="halign">end</property>
+                    <signal name="clicked" handler="on_verify_button_clicked" object="verifying_spinner" swapped="no"/>
+                  </object>
+                  <packing>
+                    <property name="name">button</property>
+                    <property name="title" translatable="yes">button</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkSpinner" id="verifying_spinner">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="active">True</property>
+                  </object>
+                  <packing>
+                    <property name="name">spinner</property>
+                    <property name="title" translatable="yes">spinner</property>
+                    <property name="position">1</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkImage" id="status_ok_image">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="pixel_size">32</property>
+                    <property name="icon_name">dialog-ok</property>
+                  </object>
+                  <packing>
+                    <property name="name">image</property>
+                    <property name="title" translatable="yes">image</property>
+                    <property name="position">2</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkImage" id="status_fail_image">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="pixel_size">32</property>
+                    <property name="icon_name">dialog-close</property>
+                  </object>
+                  <packing>
+                    <property name="name">page0</property>
+                    <property name="title" translatable="yes">page0</property>
+                    <property name="position">3</property>
+                  </packing>
+                </child>
               </object>
               <packing>
-                <property name="name">button</property>
-                <property name="title" translatable="yes">button</property>
+                <property name="expand">False</property>
+                <property name="fill">True</property>
+                <property name="pack_type">end</property>
+                <property name="position">0</property>
               </packing>
             </child>
             <child>
-              <object class="GtkSpinner" id="verifying_spinner">
+              <object class="GtkLabel" id="hash_label">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="active">True</property>
+                <property name="label" translatable="yes">
+</property>
+                <property name="width_chars">10</property>
+                <property name="max_width_chars">10</property>
+                <attributes>
+                  <attribute name="style" value="italic"/>
+                </attributes>
               </object>
               <packing>
-                <property name="name">spinner</property>
-                <property name="title" translatable="yes">spinner</property>
+                <property name="expand">False</property>
+                <property name="fill">True</property>
+                <property name="pack_type">end</property>
                 <property name="position">1</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkImage" id="status_ok_image">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="pixel_size">32</property>
-                <property name="icon_name">dialog-ok</property>
-              </object>
-              <packing>
-                <property name="name">image</property>
-                <property name="title" translatable="yes">image</property>
-                <property name="position">2</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkImage" id="status_fail_image">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="pixel_size">32</property>
-                <property name="icon_name">dialog-close</property>
-              </object>
-              <packing>
-                <property name="name">page0</property>
-                <property name="title" translatable="yes">page0</property>
-                <property name="position">3</property>
               </packing>
             </child>
           </object>
@@ -170,21 +201,7 @@
           </packing>
         </child>
         <child>
-          <object class="GtkLabel" id="hash_label">
-            <property name="visible">True</property>
-            <property name="can_focus">False</property>
-            <property name="label" translatable="yes">
-</property>
-            <property name="width_chars">10</property>
-            <property name="max_width_chars">10</property>
-            <attributes>
-              <attribute name="style" value="italic"/>
-            </attributes>
-          </object>
-          <packing>
-            <property name="left_attach">0</property>
-            <property name="top_attach">2</property>
-          </packing>
+          <placeholder/>
         </child>
       </object>
     </child>
