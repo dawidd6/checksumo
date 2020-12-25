@@ -10,6 +10,9 @@ GTK_GO_TAG = gtk_$(GTK_MAJOR)_$(GTK_MINOR)
 build:
 	go build -tags $(GTK_GO_TAG) -o $(PROGRAM)
 
+test:
+	go test -v -count=1 ./...
+
 install: build
 	install -d $(DESTDIR)$(PREFIX)
 	install $(PROGRAM) $(DESTDIR)$(PREFIX)
