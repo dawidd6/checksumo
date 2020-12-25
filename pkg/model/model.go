@@ -23,7 +23,7 @@ func New() *Model {
 
 func (model *Model) DetectType(h string) (string, error) {
 	switch len(h) {
-	case md5.Size:
+	case md5.Size * 2:
 		model.hasher = md5.New()
 		return "MD5", nil
 	case sha256.Size * 2:
