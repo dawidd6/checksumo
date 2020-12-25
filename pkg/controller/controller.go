@@ -5,8 +5,8 @@ import (
 
 	"github.com/gotk3/gotk3/glib"
 
-	"github.com/dawidd6/ghashverifier/pkg/model"
-	"github.com/dawidd6/ghashverifier/pkg/view"
+	"github.com/dawidd6/checksumo/pkg/model"
+	"github.com/dawidd6/checksumo/pkg/view"
 )
 
 type Controller struct {

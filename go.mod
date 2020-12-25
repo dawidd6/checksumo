@@ -1,4 +1,4 @@
-module github.com/dawidd6/ghashverifier
+module github.com/dawidd6/checksumo
 
 go 1.15
 

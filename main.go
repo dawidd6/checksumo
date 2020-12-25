@@ -1,14 +1,14 @@
 package main
 
 import (
-	"github.com/dawidd6/ghashverifier/pkg/controller"
-	"github.com/dawidd6/ghashverifier/pkg/model"
+	"github.com/dawidd6/checksumo/pkg/controller"
+	"github.com/dawidd6/checksumo/pkg/model"
 
-	"github.com/dawidd6/ghashverifier/pkg/view"
+	"github.com/dawidd6/checksumo/pkg/view"
 )
 
 const (
-	appID = "com.github.dawidd6.ghashverifier"
+	appID = "com.github.dawidd6.checksumo"
 )
 
 func main() {

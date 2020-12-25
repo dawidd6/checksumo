@@ -1,6 +1,6 @@
 PREFIX = /usr/local
 DESTDIR =
-PROGRAM = ghashverifier
+PROGRAM = checksumo
 
 build:
 	go build -tags gtk_3_18 -o $(PROGRAM)
