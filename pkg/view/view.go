@@ -2,6 +2,7 @@ package view
 
 import (
 	"log"
+	"reflect"
 
 	"github.com/gotk3/gotk3/gdk"
 
@@ -11,19 +12,20 @@ import (
 
 type View struct {
 	Application       *gtk.Application
-	ApplicationWindow *gtk.ApplicationWindow
-	VerifyButton      *gtk.Button
-	HashEntry         *gtk.Entry
-	FileButton        *gtk.FileChooserButton
-	VerifyingSpinner  *gtk.Spinner
-	ErrorDialog       *gtk.MessageDialog
-	AboutDialog       *gtk.AboutDialog
-	StatusStack       *gtk.Stack
-	StatusOkImage     *gtk.Image
-	StatusFailImage   *gtk.Image
-	HashLabel         *gtk.Label
-	AboutButton       *gtk.ModelButton
-	signals           map[string]interface{}
+	ApplicationWindow *gtk.ApplicationWindow `gtk:"main_window"`
+	VerifyButton      *gtk.Button            `gtk:"verify_button"`
+	HashEntry         *gtk.Entry             `gtk:"hash_entry"`
+	FileButton        *gtk.FileChooserButton `gtk:"file_button"`
+	VerifyingSpinner  *gtk.Spinner           `gtk:"verifying_spinner"`
+	ErrorDialog       *gtk.MessageDialog     `gtk:"error_dialog"`
+	AboutDialog       *gtk.AboutDialog       `gtk:"about_dialog"`
+	StatusStack       *gtk.Stack             `gtk:"status_stack"`
+	StatusOkImage     *gtk.Image             `gtk:"status_ok_image"`
+	StatusFailImage   *gtk.Image             `gtk:"status_fail_image"`
+	HashLabel         *gtk.Label             `gtk:"hash_label"`
+	AboutButton       *gtk.ModelButton       `gtk:"about_button"`
+
+	signals map[string]interface{}
 }
 
 func New(appID string) *View {
@@ -45,77 +47,21 @@ func New(appID string) *View {
 
 		builder.ConnectSignals(view.signals)
 
-		obj, err := builder.GetObject("main_window")
-		if err != nil {
-			log.Fatal(err)
-		}
-		view.ApplicationWindow = obj.(*gtk.ApplicationWindow)
+		viewStruct := reflect.ValueOf(&view).Elem()
+		for i := 0; i < viewStruct.NumField(); i++ {
+			field := viewStruct.Field(i)
+			widget := viewStruct.Type().Field(i).Tag.Get("gtk")
+			if widget == "" {
+				continue
+			}
 
-		obj, err = builder.GetObject("hash_entry")
-		if err != nil {
-			log.Fatal(err)
-		}
-		view.HashEntry = obj.(*gtk.Entry)
+			obj, err := builder.GetObject(widget)
+			if err != nil {
+				log.Fatal(err)
+			}
 
-		obj, err = builder.GetObject("file_button")
-		if err != nil {
-			log.Fatal(err)
+			field.Set(reflect.ValueOf(obj).Convert(field.Type()))
 		}
-		view.FileButton = obj.(*gtk.FileChooserButton)
-
-		obj, err = builder.GetObject("verify_button")
-		if err != nil {
-			log.Fatal(err)
-		}
-		view.VerifyButton = obj.(*gtk.Button)
-
-		obj, err = builder.GetObject("verifying_spinner")
-		if err != nil {
-			log.Fatal(err)
-		}
-		view.VerifyingSpinner = obj.(*gtk.Spinner)
-
-		obj, err = builder.GetObject("error_dialog")
-		if err != nil {
-			log.Fatal(err)
-		}
-		view.ErrorDialog = obj.(*gtk.MessageDialog)
-
-		obj, err = builder.GetObject("about_dialog")
-		if err != nil {
-			log.Fatal(err)
-		}
-		view.AboutDialog = obj.(*gtk.AboutDialog)
-
-		obj, err = builder.GetObject("status_stack")
-		if err != nil {
-			log.Fatal(err)
-		}
-		view.StatusStack = obj.(*gtk.Stack)
-
-		obj, err = builder.GetObject("status_ok_image")
-		if err != nil {
-			log.Fatal(err)
-		}
-		view.StatusOkImage = obj.(*gtk.Image)
-
-		obj, err = builder.GetObject("status_fail_image")
-		if err != nil {
-			log.Fatal(err)
-		}
-		view.StatusFailImage = obj.(*gtk.Image)
-
-		obj, err = builder.GetObject("hash_label")
-		if err != nil {
-			log.Fatal(err)
-		}
-		view.HashLabel = obj.(*gtk.Label)
-
-		obj, err = builder.GetObject("about_button")
-		if err != nil {
-			log.Fatal(err)
-		}
-		view.AboutButton = obj.(*gtk.ModelButton)
 
 		icon, err := gtk.ImageNewFromResource("/data/checksumo.svg")
 		if err != nil {
