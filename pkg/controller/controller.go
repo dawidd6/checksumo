@@ -1,7 +1,6 @@
 package controller
 
 import (
-	"log"
 	"os"
 
 	"github.com/gotk3/gotk3/glib"
@@ -22,11 +21,11 @@ func New(v *view.View, m *model.Model) *Controller {
 	}
 
 	signals := map[string]interface{}{
-		"on_file_button_file_set":    controller.onFileButtonFileSet,
-		"on_hash_entry_changed":      controller.onHashEntryChanged,
-		"on_hash_entry_activate":     controller.onHashEntryActivate,
-		"on_verify_button_clicked":   controller.onVerifyButtonClicked,
-		"on_settings_button_clicked": controller.onSettingsButtonClicked,
+		"on_file_button_file_set":  controller.onFileButtonFileSet,
+		"on_hash_entry_changed":    controller.onHashEntryChanged,
+		"on_hash_entry_activate":   controller.onHashEntryActivate,
+		"on_verify_button_clicked": controller.onVerifyButtonClicked,
+		"on_about_button_clicked":  controller.onAboutButtonClicked,
 	}
 
 	v.SetSignals(signals)
@@ -101,6 +100,7 @@ func (controller *Controller) onVerifyButtonClicked() {
 	}()
 }
 
-func (controller *Controller) onSettingsButtonClicked() {
-	log.Println("settings click")
+func (controller *Controller) onAboutButtonClicked() {
+	controller.View.AboutDialog.Run()
+	controller.View.AboutDialog.Hide()
 }

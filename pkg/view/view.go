@@ -15,10 +15,12 @@ type View struct {
 	FileButton        *gtk.FileChooserButton
 	VerifyingSpinner  *gtk.Spinner
 	ErrorDialog       *gtk.MessageDialog
+	AboutDialog       *gtk.AboutDialog
 	StatusStack       *gtk.Stack
 	StatusOkImage     *gtk.Image
 	StatusFailImage   *gtk.Image
 	HashLabel         *gtk.Label
+	AboutButton       *gtk.ModelButton
 	signals           map[string]interface{}
 }
 
@@ -77,6 +79,12 @@ func New(appID string) *View {
 		}
 		view.ErrorDialog = obj.(*gtk.MessageDialog)
 
+		obj, err = builder.GetObject("about_dialog")
+		if err != nil {
+			log.Fatal(err)
+		}
+		view.AboutDialog = obj.(*gtk.AboutDialog)
+
 		obj, err = builder.GetObject("status_stack")
 		if err != nil {
 			log.Fatal(err)
@@ -100,6 +108,12 @@ func New(appID string) *View {
 			log.Fatal(err)
 		}
 		view.HashLabel = obj.(*gtk.Label)
+
+		obj, err = builder.GetObject("about_button")
+		if err != nil {
+			log.Fatal(err)
+		}
+		view.AboutButton = obj.(*gtk.ModelButton)
 
 		view.ApplicationWindow.ShowAll()
 		view.Application.AddWindow(view.ApplicationWindow)
