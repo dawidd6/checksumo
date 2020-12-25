@@ -11,7 +11,7 @@ build:
 	go build -tags $(GTK_GO_TAG) -o $(PROGRAM)
 
 test:
-	go test -v -count=1 ./...
+	go test -tags $(GTK_GO_TAG) -v -count=1 ./...
 
 install: build
 	install -d $(DESTDIR)$(PREFIX)
