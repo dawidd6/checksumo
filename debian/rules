@@ -8,3 +8,5 @@ override_dh_auto_install:
 
 override_dh_auto_build:
 	dh_auto_build -- -tags gtk_3_22
+
+override_dh_auto_test:
