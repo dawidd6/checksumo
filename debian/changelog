@@ -1,3 +1,9 @@
+checksumo (0.1.1) bionic; urgency=medium
+
+  * Next release
+
+ -- Dawid Dziurla <dawidd0811@gmail.com>  Sat, 26 Dec 2020 13:55:04 +0100
+
 checksumo (0.1.0) bionic; urgency=medium
 
   * Initial release
