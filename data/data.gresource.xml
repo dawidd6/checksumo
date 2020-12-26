@@ -2,5 +2,6 @@
 <gresources>
   <gresource prefix="/">
       <file preprocess="xml-stripblanks">data/ui.glade</file>
+      <file>data/checksumo.svg</file>
   </gresource>
 </gresources>
