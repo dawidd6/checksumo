@@ -16,3 +16,8 @@ Built-Using: ${misc:Built-Using}
 Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: Simple application for verifying specified file against given hash
  Written in Go with GTK+3 graphical interface.
+ .
+ Automatically detects the following hash types:
+  - SHA-256
+  - SHA-512
+  - MD5
