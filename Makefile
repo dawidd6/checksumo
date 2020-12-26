@@ -1,12 +1,13 @@
 PREFIX = /usr/local
 DESTDIR =
 PROGRAM = checksumo
+VERSION = $(shell git describe --tags 2>/dev/null || git rev-parse HEAD)
 
 GOTK_TAG = gtk_3_22
 
 build:
 	glib-compile-resources --target=resources.h --generate-source data/data.gresource.xml
-	go build -mod=vendor -tags $(GOTK_TAG) -v -o $(PROGRAM)
+	go build -mod=vendor -tags $(GOTK_TAG) -v -o $(PROGRAM) -ldflags "-s -w -X main.version=$(VERSION)"
 
 test:
 	go test -mod=vendor -tags $(GOTK_TAG) -v -count=1 ./...

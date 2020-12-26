@@ -28,7 +28,7 @@ type View struct {
 	signals map[string]interface{}
 }
 
-func New(appID string) *View {
+func New(appID, version string) *View {
 	var (
 		view View
 		err  error
@@ -72,7 +72,9 @@ func New(appID string) *View {
 		if err != nil {
 			log.Fatal(err)
 		}
+
 		view.AboutDialog.SetLogo(logo)
+		view.AboutDialog.SetVersion(version)
 
 		view.ApplicationWindow.ShowAll()
 		view.Application.AddWindow(view.ApplicationWindow)

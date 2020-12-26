@@ -7,13 +7,14 @@ import (
 	"github.com/dawidd6/checksumo/pkg/view"
 )
 
-const (
-	appID = "com.github.dawidd6.checksumo"
+var (
+	appID   = "com.github.dawidd6.checksumo"
+	version string
 )
 
 func main() {
 	m := model.New()
-	v := view.New(appID)
+	v := view.New(appID, version)
 	c := controller.New(v, m)
 	c.Run()
 }
