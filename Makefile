@@ -14,9 +14,9 @@ test:
 install:
 	install -D -m755 $(PROGRAM) $(DESTDIR)$(PREFIX)/bin/$(PROGRAM)
 	install -D -m644 data/$(PROGRAM).desktop $(DESTDIR)$(PREFIX)/share/applications/$(PROGRAM).desktop
-	install -D -m644  data/$(PROGRAM).svg $(DESTDIR)$(PREFIX)/share/icons/hicolor/scalable/apps/$(PROGRAM).svg
+	install -D -m644  data/$(PROGRAM).svg $(DESTDIR)$(PREFIX)/share/icons/$(PROGRAM).svg
 
 uninstall:
 	rm -f $(DESTDIR)$(PREFIX)/bin/$(PROGRAM)
 	rm -f $(DESTDIR)$(PREFIX)/share/applications/$(PROGRAM).desktop
-	rm -f $(DESTDIR)$(PREFIX)/share/icons/hicolor/scalable/apps/$(PROGRAM).svg
+	rm -f $(DESTDIR)$(PREFIX)/share/icons/$(PROGRAM).svg
