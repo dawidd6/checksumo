@@ -1,4 +1,4 @@
-PREFIX = /usr
+PREFIX = /usr/local
 DESTDIR =
 PROGRAM = checksumo
 
@@ -11,10 +11,12 @@ build:
 test:
 	go test -mod=vendor -tags $(GOTK_TAG) -v -count=1 ./...
 
-install: build
-	install -d $(DESTDIR)$(PREFIX)/bin
-	install $(PROGRAM) $(DESTDIR)$(PREFIX)/bin
-	install -d $(DESTDIR)$(PREFIX)/share/applications
-	install data/$(PROGRAM).desktop $(DESTDIR)$(PREFIX)/share/applications
-	install -d $(DESTDIR)$(PREFIX)/share/icons/hicolor/scalable/apps
-	#install data/$(PROGRAM).svg $(DESTDIR)$(PREFIX)/share/icons/hicolor/scalable/apps
+install:
+	install -D -m755 $(PROGRAM) $(DESTDIR)$(PREFIX)/bin/$(PROGRAM)
+	install -D -m644 data/$(PROGRAM).desktop $(DESTDIR)$(PREFIX)/share/applications/$(PROGRAM).desktop
+	install -D -m644  data/$(PROGRAM).svg $(DESTDIR)$(PREFIX)/share/icons/hicolor/scalable/apps/$(PROGRAM).svg
+
+uninstall:
+	rm -f $(DESTDIR)$(PREFIX)/bin/$(PROGRAM)
+	rm -f $(DESTDIR)$(PREFIX)/share/applications/$(PROGRAM).desktop
+	rm -f $(DESTDIR)$(PREFIX)/share/icons/hicolor/scalable/apps/$(PROGRAM).svg
