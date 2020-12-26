@@ -8,13 +8,13 @@ import (
 )
 
 var (
-	appID   = "com.github.dawidd6.checksumo"
-	version string
+	AppID   = "com.github.dawidd6.checksumo"
+	Version string
 )
 
 func main() {
 	m := model.New()
-	v := view.New(appID, version)
+	v := view.New(AppID, Version)
 	c := controller.New(v, m)
 	c.Run()
 }
