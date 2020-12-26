@@ -1,9 +1,10 @@
 #!/usr/bin/make -f
 
-export GOCACHE := $(CURDIR)/debian/tmp/go
-
 %:
-	dh $@
+	dh $@ --builddirectory=_build --buildsystem=golang --with=golang
+
+override_dh_auto_install:
+	dh_auto_install -- --no-source
 
 override_dh_auto_build:
-override_dh_auto_test:
+	dh_auto_build -- -tags gtk_3_22
