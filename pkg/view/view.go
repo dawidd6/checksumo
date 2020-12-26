@@ -3,6 +3,8 @@ package view
 import (
 	"log"
 
+	"github.com/gotk3/gotk3/gdk"
+
 	"github.com/gotk3/gotk3/glib"
 	"github.com/gotk3/gotk3/gtk"
 )
@@ -114,6 +116,17 @@ func New(appID string) *View {
 			log.Fatal(err)
 		}
 		view.AboutButton = obj.(*gtk.ModelButton)
+
+		icon, err := gtk.ImageNewFromResource("/data/checksumo.svg")
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		logo, err := icon.GetPixbuf().ScaleSimple(128, 128, gdk.INTERP_BILINEAR)
+		if err != nil {
+			log.Fatal(err)
+		}
+		view.AboutDialog.SetLogo(logo)
 
 		view.ApplicationWindow.ShowAll()
 		view.Application.AddWindow(view.ApplicationWindow)
