@@ -1,9 +1,9 @@
-PREFIX = /usr/local
-DESTDIR =
-PROGRAM = checksumo
-VERSION = $(shell git describe --tags 2>/dev/null || git rev-parse HEAD)
+PREFIX ?= /usr
 
-GOTK_TAG = gtk_3_22
+PROGRAM ?= checksumo
+VERSION ?= $(shell git describe --tags 2>/dev/null || git rev-parse HEAD)
+
+GOTK_TAG ?= gtk_3_22
 
 build:
 	glib-compile-resources --target=resources.h --generate-source data/data.gresource.xml
