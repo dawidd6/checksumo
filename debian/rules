@@ -9,6 +9,6 @@ override_dh_auto_install:
 	dh_auto_install -- --no-source
 
 override_dh_auto_build:
-	dh_auto_build -- -tags gtk_3_22 -ldflags "-s -w -X github.com/dawidd6/checksumo.version=$(DEB_VERSION_UPSTREAM)"
+	dh_auto_build -- -tags gtk_3_22 -ldflags "-s -w -X github.com/dawidd6/checksumo.Version=$(DEB_VERSION_UPSTREAM)"
 
 override_dh_auto_test:
