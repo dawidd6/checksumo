@@ -7,7 +7,7 @@ GOTK_TAG = gtk_3_22
 
 build:
 	glib-compile-resources --target=resources.h --generate-source data/data.gresource.xml
-	go build -mod=vendor -tags $(GOTK_TAG) -v -o $(PROGRAM) -ldflags "-s -w -X main.version=$(VERSION)"
+	go build -mod=vendor -tags $(GOTK_TAG) -v -o $(PROGRAM) -ldflags "-s -w -X main.Version=$(VERSION)"
 
 test:
 	go test -mod=vendor -tags $(GOTK_TAG) -v -count=1 ./...
