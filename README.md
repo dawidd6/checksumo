@@ -4,15 +4,29 @@
 
 A simple application for verifying specified file against given hash, written in Go with GTK+3 graphical interface.
 
+## Hashes
+
+Automatically detects the following hash types:
+- SHA-256
+- SHA-512
+- MD5
+
+## Gallery
+
+![](data/screen-1.png)
+![](data/screen-2.png)
+
 ## Installing
 
-```shell script
-make install
-```
+### Binary
 
-## Building
+Head over to Releases section of this repository, grab the `.deb` file and install it via `dpkg`.
+
+### Source
+
+Needs `libgtk-3-dev` package on Debian-based distributions.
 
 ```shell script
-sudo apt install libgtk-3-dev
 make
+make install
 ```
