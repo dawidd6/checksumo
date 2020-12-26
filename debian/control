@@ -1,18 +1,15 @@
 Source: checksumo
-Section: gnome
+Section: utils
 Priority: optional
 Maintainer: Dawid Dziurla <dawidd0811@gmail.com>
-Build-Depends: debhelper, libgtk-3-dev, golang-any, dh-golang
+Build-Depends: debhelper, libgtk-3-dev, golang-any
 Standards-Version: 4.1.4
 Homepage: https://github.com/dawidd6/checksumo
 Vcs-Browser: https://github.com/dawidd6/checksumo
 Vcs-Git: https://github.com/dawidd6/checksumo
-XS-Go-Import-Path: github.com/dawidd6/checksumo
-Testsuite: autopkgtest-pkg-go
 
 Package: checksumo
 Architecture: any
-Built-Using: ${misc:Built-Using}
 Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: Simple application for verifying specified file against given hash
  Written in Go with GTK+3 graphical interface.
