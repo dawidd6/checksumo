@@ -2,7 +2,7 @@
 
 include /usr/share/dpkg/pkg-info.mk
 
-export VERSION := $(DEB_VERSION_UPSTREAM)
+export VERSION := v$(DEB_VERSION_UPSTREAM)
 export GOCACHE := $(CURDIR)/debian/tmp/gocache
 
 %:
