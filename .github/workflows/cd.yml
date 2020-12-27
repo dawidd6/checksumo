@@ -1,0 +1,23 @@
+name: CD
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  cd:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v2
+      - name: Build package
+        uses: dawidd6/action-debian-package@v1
+      - name: Create release
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{github.token}}
+          tag: ${{github.ref}}
+          file: '*.deb'
+          file_glob: true
+          overwrite: true
