@@ -13,7 +13,10 @@ Automatically detects the following hash types:
 
 ## Gallery
 
+![](data/screen-0.png)
+
 ![](data/screen-1.png)
+
 ![](data/screen-2.png)
 
 ## Installing
