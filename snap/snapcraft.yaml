@@ -1,6 +1,6 @@
 name: checksumo
 base: core18
-version: git
+adopt-info: app
 summary: Simple application for verifying specified file against given hash
 description: |
   Written in Go with GTK+3 graphical interface.
@@ -16,15 +16,18 @@ parts:
   app:
     plugin: make
     source: .
+    make-parameters:
+      - PREFIX=
     build-snaps:
       - go
+    override-pull: |
+      snapcraftctl pull
+      VERSION=$(git describe --tags 2>/dev/null || git rev-parse HEAD)
+      VERSION=$(echo $VERSION | sed s/^v//)
+      snapcraftctl set-version $VERSION
 
 apps:
   app:
     command: bin/checksumo
     extensions:
       - gnome-3-28
-    plugs:
-      - home
-      - removable-media
-      - udisks2
