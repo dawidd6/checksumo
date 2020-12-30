@@ -1,0 +1,27 @@
+name: checksumo
+base: core18
+version: git
+summary: Simple application for verifying specified file against given hash
+description: |
+  Written in Go with GTK+3 graphical interface.
+  Automatically detects the following hash types:
+  - SHA-256
+  - SHA-512
+  - MD5
+
+grade: stable
+confinement: strict
+
+parts:
+  app:
+    plugin: make
+    source: .
+
+apps:
+  app:
+    command: bin/checksumo
+    extensions: [gnome-3-34]
+    plugs:
+      - home
+      - removable-media
+      - udisks2
