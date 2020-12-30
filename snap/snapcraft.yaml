@@ -16,11 +16,14 @@ parts:
   app:
     plugin: make
     source: .
+    build-snaps:
+      - go
 
 apps:
   app:
     command: bin/checksumo
-    extensions: [gnome-3-34]
+    extensions:
+      - gnome-3-34
     plugs:
       - home
       - removable-media
