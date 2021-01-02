@@ -34,8 +34,9 @@ jobs:
       - name: Cache build
         uses: actions/cache@v2
         with:
-          path: debian/tmp
-          key: debian-package-build
+          path: debian/go-build
+          key: ${{runner.os}}-go-build-${{hashFiles('**/*.go')}}
+          restore-keys: ${{runner.os}}-go-build
       - name: Build package
         uses: dawidd6/action-debian-package@v1
       - name: Upload package
