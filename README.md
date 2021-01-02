@@ -4,8 +4,6 @@
 
 A simple application for verifying specified file against given hash, written in Go with GTK+3 graphical interface.
 
-## Hashes
-
 Automatically detects the following hash types:
 - SHA-256
 - SHA-512
@@ -19,15 +17,26 @@ Automatically detects the following hash types:
 
 ![](data/screen-2.png)
 
-## Installing
+## Installation
 
 This application targets Ubuntu 18.04 and later, though the only requirement is to have GTK+ 3.22 or later installed.
 
-### Binary
+### Via apt repository
+
+An apt repository is provided. It is made out of GitHub Releases and packages are served via HTTPS protocol, but they are
+not signed.
+
+```shell script
+echo "deb [trusted=yes] https://github.com/dawidd6/checksumo/releases/download/repo ./" | sudo tee -a /etc/apt/sources.list
+sudo apt update
+sudo apt install checksumo
+```
+
+### From released binary
 
 Head over to Releases section of this repository, grab the `.deb` file and install it via `dpkg`.
 
-### Source
+### From source
 
 Needs `libgtk-3-dev` package on Debian-based distributions.
 
