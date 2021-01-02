@@ -21,3 +21,17 @@ jobs:
           file: '*.deb'
           file_glob: true
           overwrite: true
+      - name: Scan packages
+        run: |
+          sudo apt update
+          sudo apt install -yq dpkg-dev
+          dpkg-scanpackages . > Packages
+      - name: Create repo
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{github.token}}
+          tag: repo
+          file: '*(*.deb|Packages)'
+          release_name: APT repository
+          file_glob: true
+          overwrite: true
