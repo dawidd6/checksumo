@@ -16,12 +16,12 @@ jobs:
         uses: actions/setup-go@v2
       - name: Install deps
         run: sudo apt install -y libgtk-3-dev
-      - name: Cache modules
+      - name: Cache build
         uses: actions/cache@v2
         with:
-          path: ~/go/pkg/mod
-          key: ${{runner.os}}-go-${{hashFiles('**/go.sum')}}
-          restore-keys: ${{runner.os}}-go-
+          path: ~/.cache/go-build
+          key: ${{runner.os}}-go-build-${{hashFiles('**/*.go')}}
+          restore-keys: ${{runner.os}}-go-build
       - name: Build binary
         run: make
       - name: Test code
