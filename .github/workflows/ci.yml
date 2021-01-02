@@ -34,7 +34,7 @@ jobs:
       - name: Cache build
         uses: actions/cache@v2
         with:
-          path: _build
+          path: debian/tmp
           key: debian-package-build
       - name: Build package
         uses: dawidd6/action-debian-package@v1
