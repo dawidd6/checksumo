@@ -1,6 +1,7 @@
 package model
 
 import (
+	"context"
 	"crypto/md5"
 	"crypto/sha256"
 	"crypto/sha512"
@@ -38,17 +39,36 @@ func (model *Model) DetectType(h string) (string, error) {
 	}
 }
 
-func (model *Model) ComputeHash(filePath string) (string, error) {
+func (model *Model) ComputeHash(ctx context.Context, filePath string) (string, error) {
+	defer model.hasher.Reset()
+
 	file, err := os.OpenFile(filePath, os.O_RDONLY, 0666)
 	if err != nil {
 		return "", err
 	}
 
-	model.hasher.Reset()
+	for {
+		select {
+		case <-ctx.Done():
+			return "", err
+		default:
+		}
 
-	_, err = io.Copy(model.hasher, file)
-	if err != nil {
-		return "", err
+		buffer := make([]byte, 32768)
+
+		n, err := file.Read(buffer)
+		if err == io.EOF {
+			break
+		}
+		if err != nil {
+			return "", err
+		}
+		buffer = buffer[:n]
+
+		n, err = model.hasher.Write(buffer)
+		if err != nil {
+			return "", err
+		}
 	}
 
 	return hex.EncodeToString(model.hasher.Sum(nil)), nil
