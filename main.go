@@ -1,6 +1,8 @@
 package main
 
 import (
+	"os"
+
 	"github.com/dawidd6/checksumo/pkg/controller"
 	"github.com/dawidd6/checksumo/pkg/model"
 
@@ -16,5 +18,6 @@ func main() {
 	m := model.New()
 	v := view.New(AppID, Version)
 	c := controller.New(v, m)
-	c.Run()
+
+	os.Exit(c.View.Application.Run(os.Args))
 }
