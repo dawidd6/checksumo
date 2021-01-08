@@ -5,7 +5,6 @@ import (
 
 	"github.com/dawidd6/checksumo/pkg/controller"
 	"github.com/dawidd6/checksumo/pkg/model"
-
 	"github.com/dawidd6/checksumo/pkg/view"
 )
 
