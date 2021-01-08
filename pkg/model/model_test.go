@@ -16,8 +16,7 @@ func TestDetectType(t *testing.T) {
 	}
 
 	for hashVal, expectedHashType := range cases {
-		gotHashType, err := model.DetectType(hashVal)
-		assert.NoError(t, err)
+		gotHashType := model.DetectType(hashVal)
 		assert.Equal(t, expectedHashType, gotHashType)
 	}
 }
