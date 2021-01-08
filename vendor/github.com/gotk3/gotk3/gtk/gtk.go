@@ -105,6 +105,8 @@ func init() {
 		{glib.Type(C.gtk_sensitivity_type_get_type()), marshalSensitivityType},
 		{glib.Type(C.gtk_shadow_type_get_type()), marshalShadowType},
 		{glib.Type(C.gtk_sort_type_get_type()), marshalSortType},
+		{glib.Type(C.gtk_spin_button_update_policy_get_type()), marshalSpinButtonUpdatePolicy},
+		{glib.Type(C.gtk_spin_type_get_type()), marshalSpinType},
 		{glib.Type(C.gtk_state_flags_get_type()), marshalStateFlags},
 		{glib.Type(C.gtk_target_flags_get_type()), marshalTargetFlags},
 		{glib.Type(C.gtk_text_direction_get_type()), marshalTextDirection},
@@ -270,19 +272,61 @@ func free(str ...interface{}) {
 	}
 }
 
+// nextguchar increments guchar by 1. Hopefully, this could be inlined by the Go
+// compiler.
+func nextguchar(guchar *C.guchar) *C.guchar {
+	return (*C.guchar)(unsafe.Pointer(uintptr(unsafe.Pointer(guchar)) + 1))
+}
+
+// ucharString returns a copy of the given guchar pointer. The pointer guchar
+// array is assumed to have valid UTF-8.
+func ucharString(guchar *C.guchar) string {
+	// Seek and find the string length.
+	var strlen int
+	for ptr := guchar; *ptr != 0; ptr = nextguchar(ptr) {
+		strlen++
+	}
+
+	// Array of unsigned char means GoString is unavailable, so maybe this is
+	// fine.
+	var data []byte
+	sliceHeader := (*reflect.SliceHeader)(unsafe.Pointer(&data))
+	sliceHeader.Len = strlen
+	sliceHeader.Cap = strlen
+	sliceHeader.Data = uintptr(unsafe.Pointer(guchar))
+
+	// Return a copy of the string.
+	return string(data)
+}
+
+// nextgcharptr increments gcharptr by 1. Hopefully, this could be inlined by
+// the Go compiler.
+func nextgcharptr(gcharptr **C.gchar) **C.gchar {
+	return (**C.gchar)(unsafe.Pointer(uintptr(unsafe.Pointer(gcharptr)) + 1))
+}
+
 func goString(cstr *C.gchar) string {
 	return C.GoString((*C.char)(cstr))
 }
 
 // same implementation as package glib
 func toGoStringArray(c **C.gchar) []string {
-	var strs []string
-	originalc := c
-	defer C.g_strfreev(originalc)
+	if c == nil {
+		return nil
+	}
 
-	for *c != nil {
-		strs = append(strs, C.GoString((*C.char)(*c)))
-		c = C.next_gcharptr(c)
+	// free when done
+	defer C.g_strfreev(c)
+
+	strsLen := 0
+	for scan := c; *scan != nil; scan = nextgcharptr(scan) {
+		strsLen++
+	}
+
+	strs := make([]string, strsLen)
+	for i := range strs {
+		strs[i] = C.GoString((*C.char)(*c))
+		c = nextgcharptr(c)
 	}
 
 	return strs
@@ -708,9 +752,35 @@ func marshalPolicyType(p uintptr) (interface{}, error) {
 	return PolicyType(c), nil
 }
 
-// TODO:
-// GtkSpinButtonUpdatePolicy
-// GtkSpinType
+// SpinButtonUpdatePolicy is a representation of GTK's GtkSpinButtonUpdatePolicy.
+type SpinButtonUpdatePolicy int
+
+const (
+	UPDATE_ALWAYS   SpinButtonUpdatePolicy = C.GTK_UPDATE_ALWAYS
+	UPDATE_IF_VALID SpinButtonUpdatePolicy = C.GTK_UPDATE_IF_VALID
+)
+
+func marshalSpinButtonUpdatePolicy(p uintptr) (interface{}, error) {
+	c := C.g_value_get_enum((*C.GValue)(unsafe.Pointer(p)))
+	return SpinButtonUpdatePolicy(c), nil
+}
+
+// SpinType is a representation of GTK's GtkSpinType.
+type SpinType int
+
+const (
+	SPIN_STEP_FORWARD  SpinType = C.GTK_SPIN_STEP_FORWARD
+	SPIN_STEP_BACKWARD SpinType = C.GTK_SPIN_STEP_BACKWARD
+	SPIN_PAGE_BACKWARD SpinType = C.GTK_SPIN_PAGE_BACKWARD
+	SPIN_HOME          SpinType = C.GTK_SPIN_HOME
+	SPIN_END           SpinType = C.GTK_SPIN_END
+	SPIN_USER_DEFINED  SpinType = C.GTK_SPIN_USER_DEFINED
+)
+
+func marshalSpinType(p uintptr) (interface{}, error) {
+	c := C.g_value_get_enum((*C.GValue)(unsafe.Pointer(p)))
+	return SpinType(c), nil
+}
 
 // TreeViewGridLine is a representation of GTK's GtkTreeViewGridLines.
 type TreeViewGridLines int
@@ -4589,16 +4659,15 @@ func (v *FileChooser) GetFilenames() ([]string, error) {
 	}
 
 	slist := glib.WrapSList(uintptr(unsafe.Pointer(clist)))
+	defer slist.Free()
 
-	var filenames []string
+	var filenames = make([]string, 0, slist.Length())
 	for ; slist.DataRaw() != nil; slist = slist.Next() {
 		w := (*C.char)(slist.DataRaw())
-		filename := C.GoString(w)
 		defer C.free(unsafe.Pointer(w))
-		filenames = append(filenames, filename)
-	}
 
-	defer slist.Free()
+		filenames = append(filenames, C.GoString(w))
+	}
 
 	return filenames, nil
 }
@@ -4612,16 +4681,15 @@ func (v FileChooser) GetURIs() ([]string, error) {
 	}
 
 	slist := glib.WrapSList(uintptr(unsafe.Pointer(clist)))
+	defer slist.Free()
 
-	var uris []string
+	var uris = make([]string, 0, slist.Length())
 	for ; slist.DataRaw() != nil; slist = slist.Next() {
 		w := (*C.char)(slist.DataRaw())
-		uri := C.GoString(w)
 		defer C.free(unsafe.Pointer(w))
-		uris = append(uris, uri)
-	}
 
-	defer slist.Free()
+		uris = append(uris, C.GoString(w))
+	}
 
 	return uris, nil
 }
@@ -7946,24 +8014,37 @@ func (v *SelectionData) native() *C.GtkSelectionData {
 	return p
 }
 
-// GetLength is a wrapper around gtk_selection_data_get_length
+// GetLength is a wrapper around gtk_selection_data_get_length().
 func (v *SelectionData) GetLength() int {
 	return int(C.gtk_selection_data_get_length(v.native()))
 }
 
-// GetData is a wrapper around gtk_selection_data_get_data_with_length.
-// It returns a slice of the correct size with the selection's data.
-func (v *SelectionData) GetData() (data []byte) {
+// GetData is a wrapper around gtk_selection_data_get_data_with_length().
+// It returns a slice of the correct size with the copy of the selection's data.
+func (v *SelectionData) GetData() []byte {
 	var length C.gint
 	c := C.gtk_selection_data_get_data_with_length(v.native(), &length)
+
+	// Only set if length is valid.
+	if int(length) < 1 {
+		return nil
+	}
+
+	var data []byte
 	sliceHeader := (*reflect.SliceHeader)(unsafe.Pointer(&data))
-	sliceHeader.Data = uintptr(unsafe.Pointer(c))
 	sliceHeader.Len = int(length)
 	sliceHeader.Cap = int(length)
-	return
+	sliceHeader.Data = uintptr(unsafe.Pointer(c))
+
+	// Keep the SelectionData alive for as long as the byte slice is.
+	runtime.SetFinalizer(&data, func(*[]byte) {
+		runtime.KeepAlive(v)
+	})
+
+	return data
 }
 
-// SetData is a wrapper around gtk_selection_data_set_data_with_length.
+// SetData is a wrapper around gtk_selection_data_set_data_with_length().
 func (v *SelectionData) SetData(atom gdk.Atom, data []byte) {
 	C.gtk_selection_data_set(
 		v.native(),
@@ -7972,31 +8053,102 @@ func (v *SelectionData) SetData(atom gdk.Atom, data []byte) {
 	)
 }
 
+// GetText is a wrapper around gtk_selection_data_get_text(). It returns a copy
+// of the string from SelectionData and frees the C reference.
+func (v *SelectionData) GetText() string {
+	charptr := C.gtk_selection_data_get_text(v.native())
+	if charptr == nil {
+		return ""
+	}
+
+	defer C.g_free(C.gpointer(charptr))
+
+	return ucharString(charptr)
+}
+
+// SetText is a wrapper around gtk_selection_data_set_text().
+func (v *SelectionData) SetText(text string) bool {
+	textPtr := *(*[]byte)(unsafe.Pointer(&text))
+
+	return gobool(C.gtk_selection_data_set_text(
+		v.native(),
+		// https://play.golang.org/p/PmGaLDhRuEU
+		// This is probably safe since we expect Gdk to copy the string anyway.
+		(*C.gchar)(unsafe.Pointer(&textPtr[0])), C.int(len(text)),
+	))
+}
+
+// SetPixbuf is a wrapper around gtk_selection_data_set_pixbuf().
+func (v *SelectionData) SetPixbuf(pixbuf *gdk.Pixbuf) bool {
+	return gobool(C.gtk_selection_data_set_pixbuf(
+		v.native(),
+		(*C.GdkPixbuf)(unsafe.Pointer(pixbuf.Native())),
+	))
+}
+
+// GetPixbuf is a wrapper around gtk_selection_data_get_pixbuf(). It returns nil
+// if the data is a recognized image type that could be converted to a new
+// Pixbuf.
+func (v *SelectionData) GetPixbuf() *gdk.Pixbuf {
+	c := C.gtk_selection_data_get_pixbuf(v.native())
+	if c == nil {
+		return nil
+	}
+
+	obj := &glib.Object{glib.ToGObject(unsafe.Pointer(c))}
+	p := &gdk.Pixbuf{obj}
+	runtime.SetFinalizer(p, func(_ interface{}) { obj.Unref() })
+
+	return p
+}
+
+// SetURIs is a wrapper around gtk_selection_data_set_uris().
+func (v *SelectionData) SetURIs(uris []string) bool {
+	var clist = C.make_strings(C.int(len(uris)))
+	for i := range uris {
+		cstring := C.CString(uris[i])
+		// This defer will only run once the function exits, not once the loop
+		// exits, so it's perfectly fine.
+		defer C.free(unsafe.Pointer(cstring))
+
+		C.set_string(clist, C.int(i), (*C.gchar)(cstring))
+	}
+
+	return gobool(C.gtk_selection_data_set_uris(v.native(), clist))
+}
+
+// GetURIs is a wrapper around gtk_selection_data_get_uris().
+func (v *SelectionData) GetURIs() []string {
+	uriPtrs := C.gtk_selection_data_get_uris(v.native())
+	return toGoStringArray(uriPtrs)
+}
+
 func (v *SelectionData) free() {
 	C.gtk_selection_data_free(v.native())
 }
 
-// DragSetIconPixbuf is used for the "drag-begin" event. It binds to gtk_drag_set_icon_pixbuf.
+// DragSetIconPixbuf is used for the "drag-begin" event. It is a wrapper around
+// gtk_drag_set_icon_pixbuf().
 func DragSetIconPixbuf(context *gdk.DragContext, pixbuf *gdk.Pixbuf, hotX, hotY int) {
 	ctx := unsafe.Pointer(context.Native())
 	pix := unsafe.Pointer(pixbuf.Native())
 	C.gtk_drag_set_icon_pixbuf((*C.GdkDragContext)(ctx), (*C.GdkPixbuf)(pix), C.gint(hotX), C.gint(hotY))
 }
 
-// DragSetIconWidget binds to gtk_drag_set_icon_widget.
+// DragSetIconWidget is a wrapper around gtk_drag_set_icon_widget().
 func DragSetIconWidget(context *gdk.DragContext, w IWidget, hotX, hotY int) {
 	ctx := unsafe.Pointer(context.Native())
 	C.gtk_drag_set_icon_widget((*C.GdkDragContext)(ctx), w.toWidget(), C.gint(hotX), C.gint(hotY))
 }
 
-// DragSetIconSurface binds to gtk_drag_set_icon_surface.
+// DragSetIconSurface is a wrapper around gtk_drag_set_icon_surface().
 func DragSetIconSurface(context *gdk.DragContext, surface *cairo.Surface) {
 	ctx := unsafe.Pointer(context.Native())
 	sur := unsafe.Pointer(surface.Native())
 	C.gtk_drag_set_icon_surface((*C.GdkDragContext)(ctx), (*C.cairo_surface_t)(sur))
 }
 
-// DragSetIconName binds to gtk_drag_set_icon_name.
+// DragSetIconName is a wrapper around gtk_drag_set_icon_name().
 func DragSetIconName(context *gdk.DragContext, iconName string, hotX, hotY int) {
 	ctx := unsafe.Pointer(context.Native())
 	ico := (*C.gchar)(C.CString(iconName))
@@ -8005,7 +8157,7 @@ func DragSetIconName(context *gdk.DragContext, iconName string, hotX, hotY int) 
 	C.gtk_drag_set_icon_name((*C.GdkDragContext)(ctx), ico, C.gint(hotX), C.gint(hotY))
 }
 
-// DragSetIconDefault binds to gtk_drag_set_icon_default.
+// DragSetIconDefault is a wrapper around gtk_drag_set_icon_default().
 func DragSetIconDefault(context *gdk.DragContext) {
 	ctx := unsafe.Pointer(context.Native())
 	C.gtk_drag_set_icon_default((*C.GdkDragContext)(ctx))
@@ -8255,8 +8407,10 @@ func SpinButtonNewWithRange(min, max, step float64) (*SpinButton, error) {
 	return wrapSpinButton(glib.Take(unsafe.Pointer(c))), nil
 }
 
-// TODO:
-// gtk_spin_button_set_adjustment().
+// SetAdjustment() is a wrapper around gtk_spin_button_set_adjustment().
+func (v *SpinButton) SetAdjustment(adjustment *Adjustment) {
+	C.gtk_spin_button_set_adjustment(v.native(), adjustment.native())
+}
 
 // GetAdjustment() is a wrapper around gtk_spin_button_get_adjustment
 func (v *SpinButton) GetAdjustment() *Adjustment {
@@ -8267,8 +8421,10 @@ func (v *SpinButton) GetAdjustment() *Adjustment {
 	return wrapAdjustment(glib.Take(unsafe.Pointer(c)))
 }
 
-// TODO:
-// gtk_spin_button_set_digits().
+// SetDigits() is a wrapper around gtk_spin_button_set_digits().
+func (v *SpinButton) SetDigits(digits uint) {
+	C.gtk_spin_button_set_digits(v.native(), C.guint(digits))
+}
 
 // SetIncrements() is a wrapper around gtk_spin_button_set_increments().
 func (v *SpinButton) SetIncrements(step, page float64) {
@@ -8297,18 +8453,51 @@ func (v *SpinButton) GetValueAsInt() int {
 	return int(c)
 }
 
-// gtk_spin_button_set_update_policy().
-// gtk_spin_button_set_numeric().
-// gtk_spin_button_spin().
+// SetUpdatePolicy() is a wrapper around gtk_spin_button_set_update_policy().
+func (v *SpinButton) SetUpdatePolicy(policy SpinButtonUpdatePolicy) {
+	C.gtk_spin_button_set_update_policy(
+		v.native(),
+		C.GtkSpinButtonUpdatePolicy(policy))
+}
+
+// SetNumeric() is a wrapper around gtk_spin_button_set_numeric().
+func (v *SpinButton) SetNumeric(numeric bool) {
+	C.gtk_spin_button_set_numeric(v.native(), gbool(numeric))
+}
+
+// Spin() is a wrapper around gtk_spin_button_spin().
+func (v *SpinButton) Spin(direction SpinType, increment float64) {
+	C.gtk_spin_button_spin(
+		v.native(),
+		C.GtkSpinType(direction),
+		C.gdouble(increment))
+}
+
 // gtk_spin_button_set_wrap().
 // gtk_spin_button_set_snap_to_ticks().
-// gtk_spin_button_update().
-// gtk_spin_button_get_digits().
+
+// Update() is a wrapper around gtk_spin_button_update().
+func (v *SpinButton) Update() {
+	C.gtk_spin_button_update(v.native())
+}
+
+// GetDigits() is a wrapper around gtk_spin_button_get_digits().
+func (v *SpinButton) GetDigits() uint {
+	return uint(C.gtk_spin_button_get_digits(v.native()))
+}
+
 // gtk_spin_button_get_increments().
 // gtk_spin_button_get_numeric().
 // gtk_spin_button_get_range().
 // gtk_spin_button_get_snap_to_ticks().
-// gtk_spin_button_get_update_policy().
+
+// GetUpdatePolicy() is a wrapper around gtk_spin_button_get_update_policy().
+func (v *SpinButton) GetUpdatePolicy() SpinButtonUpdatePolicy {
+	return SpinButtonUpdatePolicy(
+		C.gtk_spin_button_get_update_policy(
+			v.native()))
+}
+
 // gtk_spin_button_get_wrap().
 
 /*
@@ -8695,9 +8884,12 @@ func (v *TextBuffer) SelectRange(start, end *TextIter) {
 // CreateChildAnchor() is a wrapper around gtk_text_buffer_create_child_anchor().
 // Since it copies garbage from the stack into the padding bytes of iter,
 // iter can't be reliably reused after this call unless GODEBUG=cgocheck=0.
-func (v *TextBuffer) CreateChildAnchor(iter *TextIter) *TextChildAnchor {
-	ret := C.gtk_text_buffer_create_child_anchor(v.native(), iter.native())
-	return (*TextChildAnchor)(ret)
+func (v *TextBuffer) CreateChildAnchor(iter *TextIter) (*TextChildAnchor, error) {
+	c := C.gtk_text_buffer_create_child_anchor(v.native(), iter.native())
+	if c == nil {
+		return nil, nilPtrErr
+	}
+	return wrapTextChildAnchor(glib.Take(unsafe.Pointer(c))), nil
 }
 
 // Delete() is a wrapper around gtk_text_buffer_delete().
@@ -10893,23 +11085,46 @@ func (v *TreeStore) InsertWithValues(iter, parent *TreeIter, position int, inCol
 		length = len(inValues)
 	}
 
-	var cColumns []C.gint
-	var cValues []C.GValue
-	for i := 0; i < length; i++ {
-		cColumns = append(cColumns, C.gint(inColumns[i]))
+	cColumns := make([]C.gint, 0, length)
+	cValues := make([]C.GValue, 0, length)
 
-		gv, err := glib.GValue(inValues[i])
-		if err != nil {
-			return err
+	for i := 0; i < length; i++ {
+
+		value := inValues[i]
+		var gvalue *C.GValue
+
+		switch value.(type) {
+		case *gdk.Pixbuf:
+			pix := value.(*gdk.Pixbuf)
+
+			if pix == nil {
+				continue
+			}
+
+			gvalue = (*C.GValue)(unsafe.Pointer(pix.Native()))
+
+		default:
+			gv, err := glib.GValue(value)
+			if err != nil {
+				return err
+			}
+			gvalue = (*C.GValue)(C.gpointer(gv.Native()))
 		}
 
-		var cvp *C.GValue = (*C.GValue)(unsafe.Pointer(gv.Native()))
-		cValues = append(cValues, *cvp)
+		cColumns = append(cColumns, C.gint(inColumns[i]))
+		cValues = append(cValues, *gvalue)
 	}
-	var cColumnsPointer *C.gint = &cColumns[0]
-	var cValuesPointer *C.GValue = &cValues[0]
 
-	C.gtk_tree_store_insert_with_valuesv(v.native(), iter.native(), parent.native(), C.gint(position), cColumnsPointer, cValuesPointer, C.gint(length))
+	var cColumnsPointer *C.gint
+	if len(cColumns) > 0 {
+		cColumnsPointer = &cColumns[0]
+	}
+	var cValuesPointer *C.GValue
+	if len(cValues) > 0 {
+		cValuesPointer = &cValues[0]
+	}
+
+	C.gtk_tree_store_insert_with_valuesv(v.native(), iter.native(), parent.native(), C.gint(position), cColumnsPointer, cValuesPointer, C.gint(len(cColumns)))
 
 	return nil
 }
@@ -11143,10 +11358,11 @@ var WrapMap = map[string]WrapFn{
 	"GtkSpinner":              wrapSpinner,
 	"GtkStatusbar":            wrapStatusbar,
 	"GtkSwitch":               wrapSwitch,
-	"GtkTextView":             wrapTextView,
 	"GtkTextBuffer":           wrapTextBuffer,
+	"GtkTextChildAnchor":      wrapTextChildAnchor,
 	"GtkTextTag":              wrapTextTag,
 	"GtkTextTagTable":         wrapTextTagTable,
+	"GtkTextView":             wrapTextView,
 	"GtkToggleButton":         wrapToggleButton,
 	"GtkToolbar":              wrapToolbar,
 	"GtkToolButton":           wrapToolButton,
