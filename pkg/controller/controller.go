@@ -1,7 +1,7 @@
 package controller
 
 import (
-	"os"
+	"context"
 
 	"github.com/gotk3/gotk3/glib"
 
@@ -12,57 +12,96 @@ import (
 type Controller struct {
 	View  *view.View
 	Model *model.Model
+
+	ctx    context.Context
+	cancel context.CancelFunc
 }
 
 func New(v *view.View, m *model.Model) *Controller {
+	// Construct controller
 	controller := &Controller{
 		View:  v,
 		Model: m,
 	}
 
-	signals := map[string]interface{}{
-		"on_file_button_file_set":  controller.onFileButtonFileSet,
-		"on_hash_entry_changed":    controller.onHashEntryChanged,
-		"on_hash_entry_activate":   controller.onHashEntryActivate,
-		"on_verify_button_clicked": controller.onVerifyButtonClicked,
-		"on_about_button_clicked":  controller.onAboutButtonClicked,
-	}
-
-	v.SetSignals(signals)
+	// Connect handlers to signals when widgets are ready
+	controller.View.Application.Connect("ready", func() {
+		controller.View.FileChooserButton.Connect("file-set", controller.onFileButtonFileSet)
+		controller.View.HashValueEntry.Connect("changed", controller.onHashEntryChanged)
+		controller.View.HashValueEntry.Connect("activate", controller.onHashEntryActivate)
+		controller.View.VerifyButton.Connect("clicked", controller.onVerifyButtonClicked)
+		controller.View.CancelButton.Connect("clicked", controller.onCancelButtonClicked)
+		controller.View.AboutButton.Connect("clicked", controller.onAboutButtonClicked)
+	})
 
 	return controller
 }
 
-func (controller *Controller) Run() {
-	os.Exit(controller.View.Application.Run(os.Args))
-}
-
 func (controller *Controller) onFileButtonFileSet() {
-	controller.View.HashLabel.SetText("")
-	controller.View.StatusStack.SetVisibleChild(controller.View.VerifyButton)
+	go func() {
+		// Get inputs
+		filePath := controller.View.FileChooserButton.GetFilename()
+		hashValue, _ := controller.View.HashValueEntry.GetText()
+		// Detect hash type
+		hashType := controller.Model.DetectType(hashValue)
+
+		// Check conditions and decide if we can allow verification yet
+		allowVerify := false
+		if hashType != "" && hashValue != "" && filePath != "" {
+			allowVerify = true
+		}
+
+		// Update UI accordingly
+		glib.IdleAdd(func() {
+			controller.View.HeaderBar.SetSubtitle(hashType)
+			controller.View.VerifyButton.SetSensitive(allowVerify)
+			controller.View.StatusStack.SetVisible(false)
+		})
+	}()
 }
 
 func (controller *Controller) onHashEntryChanged() {
-	controller.View.HashLabel.SetText("")
-	controller.View.StatusStack.SetVisibleChild(controller.View.VerifyButton)
+	// Perform the same checks
+	controller.onFileButtonFileSet()
 }
 
 func (controller *Controller) onHashEntryActivate() {
+	// Treat ENTER button as a confirmation
 	controller.onVerifyButtonClicked()
+}
+
+func (controller *Controller) onCancelButtonClicked() {
+	// Cancel context and stop verification
+	controller.cancel()
 }
 
 func (controller *Controller) onVerifyButtonClicked() {
 	go func() {
 		var err error
 
-		// Show spinner
-		glib.IdleAdd(controller.View.StatusStack.SetVisibleChild, controller.View.VerifyingSpinner)
+		// Initial UI updates when verification starts
+		glib.IdleAdd(func() {
+			controller.View.ButtonStack.SetVisibleChild(controller.View.CancelButton)
+			controller.View.StatusStack.SetVisibleChild(controller.View.ProgressSpinner)
+			controller.View.StatusStack.SetVisible(true)
+			controller.View.FileChooserButton.SetSensitive(false)
+			controller.View.HashValueEntry.SetSensitive(false)
+		})
 
-		// Cleanup on return
+		// Update UI on return
 		defer glib.IdleAdd(func() {
-			if err != nil {
-				controller.View.HashLabel.SetText("")
-				controller.View.StatusStack.SetVisibleChild(controller.View.VerifyButton)
+			controller.View.ButtonStack.SetVisibleChild(controller.View.VerifyButton)
+			controller.View.FileChooserButton.SetSensitive(true)
+			controller.View.HashValueEntry.SetSensitive(true)
+
+			switch err {
+			case nil:
+				return
+			case context.Canceled:
+				// User cancelled operation
+				controller.View.StatusStack.SetVisible(false)
+			default:
+				// Display error dialog
 				controller.View.ErrorDialog.FormatSecondaryText(err.Error())
 				controller.View.ErrorDialog.Run()
 				controller.View.ErrorDialog.Hide()
@@ -70,33 +109,32 @@ func (controller *Controller) onVerifyButtonClicked() {
 		})
 
 		// Get user inputs
-		filePath := controller.View.FileButton.GetFilename()
-		providedHash, err := controller.View.HashEntry.GetText()
+		filePath := controller.View.FileChooserButton.GetFilename()
+		hashValueProvided, _ := controller.View.HashValueEntry.GetText()
 		if err != nil {
 			return
 		}
 
-		// Detect hash type
-		hashType, err := controller.Model.DetectType(providedHash)
-		if err != nil {
-			return
-		}
-
-		// Show detected hash type
-		glib.IdleAdd(controller.View.HashLabel.SetText, hashType)
+		// Create context
+		controller.ctx, controller.cancel = context.WithCancel(context.Background())
+		defer controller.cancel()
 
 		// Compute file hash
-		gotHash, err := controller.Model.ComputeHash(filePath)
+		hashValueComputed, err := controller.Model.ComputeHash(controller.ctx, filePath)
 		if err != nil {
 			return
 		}
 
-		// Signalize hash comparison to user
-		if providedHash == gotHash {
-			glib.IdleAdd(controller.View.StatusStack.SetVisibleChild, controller.View.StatusOkImage)
-		} else {
-			glib.IdleAdd(controller.View.StatusStack.SetVisibleChild, controller.View.StatusFailImage)
+		// Determine result image
+		resultImage := controller.View.FailImage
+		if hashValueProvided == hashValueComputed {
+			resultImage = controller.View.OkImage
 		}
+
+		// Update UI to signalize hash comparison to user
+		glib.IdleAdd(func() {
+			controller.View.StatusStack.SetVisibleChild(resultImage)
+		})
 	}()
 }
 
