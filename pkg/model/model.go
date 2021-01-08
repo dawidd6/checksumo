@@ -50,7 +50,7 @@ func (model *Model) ComputeHash(ctx context.Context, filePath string) (string, e
 	for {
 		select {
 		case <-ctx.Done():
-			return "", nil
+			return "", ctx.Err()
 		default:
 		}
 
