@@ -1,7 +1,6 @@
 package view
 
 import (
-	"log"
 	"reflect"
 
 	"github.com/gotk3/gotk3/gdk"
@@ -13,41 +12,43 @@ import (
 type View struct {
 	Application       *gtk.Application
 	ApplicationWindow *gtk.ApplicationWindow `gtk:"main_window"`
-	VerifyButton      *gtk.Button            `gtk:"verify_button"`
-	HashEntry         *gtk.Entry             `gtk:"hash_entry"`
-	FileButton        *gtk.FileChooserButton `gtk:"file_button"`
-	VerifyingSpinner  *gtk.Spinner           `gtk:"verifying_spinner"`
-	ErrorDialog       *gtk.MessageDialog     `gtk:"error_dialog"`
-	AboutDialog       *gtk.AboutDialog       `gtk:"about_dialog"`
-	StatusStack       *gtk.Stack             `gtk:"status_stack"`
-	StatusOkImage     *gtk.Image             `gtk:"status_ok_image"`
-	StatusFailImage   *gtk.Image             `gtk:"status_fail_image"`
-	HashLabel         *gtk.Label             `gtk:"hash_label"`
-	AboutButton       *gtk.ModelButton       `gtk:"about_button"`
 
-	signals map[string]interface{}
+	HeaderBar *gtk.HeaderBar `gtk:"header_bar"`
+
+	StatusStack     *gtk.Stack   `gtk:"status_stack"`
+	OkImage         *gtk.Image   `gtk:"ok_image"`
+	FailImage       *gtk.Image   `gtk:"fail_image"`
+	ProgressSpinner *gtk.Spinner `gtk:"progress_spinner"`
+
+	ButtonStack  *gtk.Stack  `gtk:"button_stack"`
+	VerifyButton *gtk.Button `gtk:"verify_button"`
+	CancelButton *gtk.Button `gtk:"cancel_button"`
+
+	FileChooserButton *gtk.FileChooserButton `gtk:"file_chooser_button"`
+	HashValueEntry    *gtk.Entry             `gtk:"hash_value_entry"`
+
+	AboutButton *gtk.ModelButton   `gtk:"about_button"`
+	AboutDialog *gtk.AboutDialog   `gtk:"about_dialog"`
+	ErrorDialog *gtk.MessageDialog `gtk:"error_dialog"`
 }
 
 func New(appID, version string) *View {
-	var (
-		view View
-		err  error
-	)
+	// Construct view
+	view := new(View)
 
-	view.Application, err = gtk.ApplicationNew(appID, glib.APPLICATION_FLAGS_NONE)
-	if err != nil {
-		log.Fatal(err)
-	}
+	// Define new signal emitted when widgets are initialized
+	glib.SignalNew("ready")
 
-	_, err = view.Application.Application.Connect("activate", func() {
+	view.Application, _ = gtk.ApplicationNew(appID, glib.APPLICATION_FLAGS_NONE)
+	view.Application.Connect("activate", func() {
+		// Load UI from resources
 		builder, err := gtk.BuilderNewFromResource("/data/ui.glade")
 		if err != nil {
-			log.Fatal(err)
+			panic(err)
 		}
 
-		builder.ConnectSignals(view.signals)
-
-		viewStruct := reflect.ValueOf(&view).Elem()
+		// Get widgets from UI definition
+		viewStruct := reflect.ValueOf(view).Elem()
 		for i := 0; i < viewStruct.NumField(); i++ {
 			field := viewStruct.Field(i)
 			widget := viewStruct.Type().Field(i).Tag.Get("gtk")
@@ -57,35 +58,35 @@ func New(appID, version string) *View {
 
 			obj, err := builder.GetObject(widget)
 			if err != nil {
-				log.Fatal(err)
+				panic(err)
 			}
 
 			field.Set(reflect.ValueOf(obj).Convert(field.Type()))
 		}
 
+		// Widgets are ready now
+		view.Application.Emit("ready")
+
+		// Load app icon from resources
 		icon, err := gtk.ImageNewFromResource("/data/checksumo.svg")
 		if err != nil {
-			log.Fatal(err)
+			panic(err)
 		}
 
+		// Convert icon to logo
 		logo, err := icon.GetPixbuf().ScaleSimple(128, 128, gdk.INTERP_BILINEAR)
 		if err != nil {
-			log.Fatal(err)
+			panic(err)
 		}
 
+		// Set about informations
 		view.AboutDialog.SetLogo(logo)
 		view.AboutDialog.SetVersion(version)
 
-		view.ApplicationWindow.ShowAll()
+		// Show and add main window
+		view.ApplicationWindow.Present()
 		view.Application.AddWindow(view.ApplicationWindow)
 	})
-	if err != nil {
-		log.Fatal(err)
-	}
 
-	return &view
-}
-
-func (view *View) SetSignals(signals map[string]interface{}) {
-	view.signals = signals
+	return view
 }
