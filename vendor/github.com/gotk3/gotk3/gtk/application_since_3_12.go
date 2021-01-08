@@ -21,7 +21,7 @@ func (v *Application) GetAccelsForAction(act string) []string {
 
 	for *c != nil {
 		descs = append(descs, C.GoString((*C.char)(*c)))
-		c = nextgcharptr(c)
+		c = C.next_gcharptr(c)
 	}
 
 	return descs
@@ -55,7 +55,7 @@ func (v *Application) ListActionDescriptions() []string {
 
 	for *c != nil {
 		descs = append(descs, C.GoString((*C.char)(*c)))
-		c = nextgcharptr(c)
+		c = C.next_gcharptr(c)
 	}
 
 	return descs

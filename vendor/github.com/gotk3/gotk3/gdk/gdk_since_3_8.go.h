@@ -19,8 +19,14 @@
 #include <stdlib.h>
 
 // Type Casting
-static GdkFrameClock *toGdkFrameClock(void *p) { return (GDK_FRAME_CLOCK(p)); }
+static GdkFrameClock *
+toGdkFrameClock(void *p)
+{
+	return (GDK_FRAME_CLOCK(p));
+}
 
-static GdkFrameTimings *toGdkFrameTimings(void *p) {
-  return ((GdkFrameTimings *)p);
+static GdkFrameTimings *
+toGdkFrameTimings(void *p)
+{
+	return ((GdkFrameTimings*)p);
 }

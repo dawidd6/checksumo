@@ -1,1 +1,5 @@
-static GtkActionable *toGtkActionable(void *p) { return (GTK_ACTIONABLE(p)); }
+static GtkActionable *
+toGtkActionable(void *p)
+{
+	return (GTK_ACTIONABLE(p));
+}

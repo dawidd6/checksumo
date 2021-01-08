@@ -30,7 +30,7 @@ func (v *Application) GetActionsForAccel(acc string) []string {
 
 	for *c != nil {
 		acts = append(acts, C.GoString((*C.char)(*c)))
-		c = nextgcharptr(c)
+		c = C.next_gcharptr(c)
 	}
 
 	return acts

@@ -16,12 +16,26 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-static GtkFlowBox *toGtkFlowBox(void *p) { return (GTK_FLOW_BOX(p)); }
-
-static GtkFlowBoxChild *toGtkFlowBoxChild(void *p) {
-  return (GTK_FLOW_BOX_CHILD(p));
+static GtkFlowBox *
+toGtkFlowBox(void *p)
+{
+	return (GTK_FLOW_BOX(p));
 }
 
-static GMenuModel *toGMenuModel(void *p) { return (G_MENU_MODEL(p)); }
+static GtkFlowBoxChild *
+toGtkFlowBoxChild(void *p)
+{
+	return (GTK_FLOW_BOX_CHILD(p));
+}
 
-static GtkPopover *toGtkPopover(void *p) { return (GTK_POPOVER(p)); }
+static GMenuModel *
+toGMenuModel(void *p)
+{
+	return (G_MENU_MODEL(p));
+}
+
+static GtkPopover *
+toGtkPopover(void *p)
+{
+	return (GTK_POPOVER(p));
+}

@@ -1674,7 +1674,6 @@ func (v *EventConfigure) Height() int {
 /*
  * GdkGravity
  */
-
 type Gravity int
 
 const (
@@ -1712,26 +1711,26 @@ func WrapRGBA(p unsafe.Pointer) *RGBA {
 	return wrapRGBA((*C.GdkRGBA)(p))
 }
 
-func wrapRGBA(cRgba *C.GdkRGBA) *RGBA {
-	return &RGBA{cRgba}
+func wrapRGBA(obj *C.GdkRGBA) *RGBA {
+	return &RGBA{obj}
 }
 
 func NewRGBA(values ...float64) *RGBA {
-
-	cRgba := new(C.GdkRGBA)
+	cval := C.GdkRGBA{}
+	c := &RGBA{&cval}
 	if len(values) > 0 {
-		cRgba.red = C.gdouble(values[0])
+		c.rgba.red = C.gdouble(values[0])
 	}
 	if len(values) > 1 {
-		cRgba.green = C.gdouble(values[1])
+		c.rgba.green = C.gdouble(values[1])
 	}
 	if len(values) > 2 {
-		cRgba.blue = C.gdouble(values[2])
+		c.rgba.blue = C.gdouble(values[2])
 	}
 	if len(values) > 3 {
-		cRgba.alpha = C.gdouble(values[3])
+		c.rgba.alpha = C.gdouble(values[3])
 	}
-	return wrapRGBA(cRgba)
+	return c
 }
 
 func (c *RGBA) Floats() []float64 {
@@ -1763,35 +1762,15 @@ func (c *RGBA) String() string {
 	return C.GoString((*C.char)(C.gdk_rgba_to_string(c.rgba)))
 }
 
-// free is a representation of gdk_rgba_free().
-func (c *RGBA) free() {
-	C.gdk_rgba_free(c.rgba)
-}
+// TODO:
+// GdkRGBA * 	gdk_rgba_copy ()
+// void 	gdk_rgba_free ()
+// gboolean 	gdk_rgba_equal ()
+// guint 	gdk_rgba_hash ()
 
-// Copy is a representation of gdk_rgba_copy().
-func (c *RGBA) Copy() (*RGBA, error) {
-	cRgba := C.gdk_rgba_copy(c.rgba)
-
-	if c == nil {
-		return nil, nilPtrErr
-	}
-	obj := wrapRGBA(cRgba)
-
-	runtime.SetFinalizer(obj, (*RGBA).free)
-	return obj, nil
-}
-
-// Equal is a representation of gdk_rgba_equal().
-func (c *RGBA) Equal(rgba *RGBA) bool {
-	return gobool(C.gdk_rgba_equal(
-		C.gconstpointer(c.rgba),
-		C.gconstpointer(rgba.rgba)))
-}
-
-// Hash is a representation of gdk_rgba_hash().
-func (c *RGBA) Hash() uint {
-	return uint(C.gdk_rgba_hash(C.gconstpointer(c.rgba)))
-}
+/*
+ * GdkRGBA
+ */
 
 /*
  * GdkRectangle
@@ -2063,18 +2042,6 @@ func (v *Window) WindowGetWidth() (width int) {
 // WindowGetHeight is a wrapper around gdk_window_get_height()
 func (v *Window) WindowGetHeight() (height int) {
 	return int(C.gdk_window_get_height(v.native()))
-}
-
-// CreateSimilarSurface is a wrapper around gdk_window_create_similar_surface().
-func (v *Window) CreateSimilarSurface(content cairo.Content, w, h int) (*cairo.Surface, error) {
-	surface := C.gdk_window_create_similar_surface(v.native(), C.cairo_content_t(content), C.gint(w), C.gint(h))
-
-	status := cairo.Status(C.cairo_surface_status(surface))
-	if status != cairo.STATUS_SUCCESS {
-		return nil, cairo.ErrorStatus(status)
-	}
-
-	return cairo.NewSurface(uintptr(unsafe.Pointer(surface)), false), nil
 }
 
 //PixbufGetFromWindow is a wrapper around gdk_pixbuf_get_from_window()
