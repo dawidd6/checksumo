@@ -6,15 +6,12 @@ import (
 	"crypto/sha256"
 	"crypto/sha512"
 	"encoding/hex"
-	"errors"
 	"hash"
 	"io"
 	"os"
 )
 
 type Model struct {
-	File   string
-	Hash   string
 	hasher hash.Hash
 }
 
@@ -22,39 +19,42 @@ func New() *Model {
 	return &Model{}
 }
 
-func (model *Model) DetectType(h string) (string, error) {
+func (model *Model) DetectType(h string) string {
 	switch len(h) {
 	case md5.Size * 2:
 		model.hasher = md5.New()
-		return "MD5", nil
+		return "MD5"
 	case sha256.Size * 2:
 		model.hasher = sha256.New()
-		return "SHA-256", nil
+		return "SHA-256"
 	case sha512.Size * 2:
 		model.hasher = sha512.New()
-		return "SHA-512", nil
+		return "SHA-512"
 	default:
 		model.hasher = nil
-		return "", errors.New("hash type unrecognized")
+		return ""
 	}
 }
 
 func (model *Model) ComputeHash(ctx context.Context, filePath string) (string, error) {
-	defer model.hasher.Reset()
-
 	file, err := os.OpenFile(filePath, os.O_RDONLY, 0666)
 	if err != nil {
 		return "", err
 	}
 
+	defer func() {
+		model.hasher.Reset()
+		file.Close()
+	}()
+
 	for {
 		select {
 		case <-ctx.Done():
-			return "", err
+			return "", nil
 		default:
 		}
 
-		buffer := make([]byte, 32768)
+		buffer := make([]byte, 32*1024)
 
 		n, err := file.Read(buffer)
 		if err == io.EOF {
