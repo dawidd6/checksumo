@@ -9,13 +9,17 @@ Automatically detects the following hash types:
 - SHA-512
 - MD5
 
+Supports cancellation of verification if desired.
+
 ## Gallery
 
-![](data/screen-0.png)
+![](data/screenshots/check1.png)
 
-![](data/screen-1.png)
+![](data/screenshots/check2.png)
 
-![](data/screen-2.png)
+![](data/screenshots/check3.png)
+
+![](data/screenshots/check4.png)
 
 ## Installation
 
