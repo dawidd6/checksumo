@@ -37,25 +37,31 @@ func (model *Model) DetectType(h string) string {
 }
 
 func (model *Model) ComputeHash(ctx context.Context, filePath string) (string, error) {
+	// Open file
 	file, err := os.OpenFile(filePath, os.O_RDONLY, 0666)
 	if err != nil {
 		return "", err
 	}
 
+	// Reset hasher and close the file on exit
 	defer func() {
 		model.hasher.Reset()
 		file.Close()
 	}()
 
+	// Read file
 	for {
+		// Check if context were cancelled
 		select {
 		case <-ctx.Done():
 			return "", ctx.Err()
 		default:
 		}
 
+		// Define 32kB buffer
 		buffer := make([]byte, 32*1024)
 
+		// Read bytes
 		n, err := file.Read(buffer)
 		if err == io.EOF {
 			break
@@ -65,11 +71,13 @@ func (model *Model) ComputeHash(ctx context.Context, filePath string) (string, e
 		}
 		buffer = buffer[:n]
 
+		// Write bytes to hasher
 		n, err = model.hasher.Write(buffer)
 		if err != nil {
 			return "", err
 		}
 	}
 
+	// Compute checksum, encode return it
 	return hex.EncodeToString(model.hasher.Sum(nil)), nil
 }
