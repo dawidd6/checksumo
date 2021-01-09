@@ -79,6 +79,10 @@ func (controller *Controller) onVerifyButtonClicked() {
 	go func() {
 		var err error
 
+		// Create context
+		controller.ctx, controller.cancel = context.WithCancel(context.Background())
+		defer controller.cancel()
+
 		// Initial UI updates when verification starts
 		glib.IdleAdd(func() {
 			controller.View.ButtonStack.SetVisibleChild(controller.View.CancelButton)
@@ -114,10 +118,6 @@ func (controller *Controller) onVerifyButtonClicked() {
 		if err != nil {
 			return
 		}
-
-		// Create context
-		controller.ctx, controller.cancel = context.WithCancel(context.Background())
-		defer controller.cancel()
 
 		// Compute file hash
 		hashValueComputed, err := controller.Model.ComputeHash(controller.ctx, filePath)
