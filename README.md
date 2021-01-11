@@ -1,6 +1,6 @@
 # checksumo 
 
-<img src="./data/checksumo.svg" width="128" alt="logo">
+<img src="./data/com.github.dawidd6.checksumo.svg" width="128" alt="logo">
 
 A simple application for verifying specified file against given hash, written in Go with GTK+3 graphical interface.
 

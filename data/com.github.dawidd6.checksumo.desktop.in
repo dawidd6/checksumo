@@ -1,0 +1,9 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Checksumo
+Comment=Verify specified file against given hash
+Categories=Utility;GTK;
+Icon=com.github.dawidd6.checksumo
+Exec=com.github.dawidd6.checksumo
+Terminal=false

@@ -27,8 +27,6 @@ type View struct {
 	FileChooserButton *gtk.FileChooserButton `gtk:"file_chooser_button"`
 	HashValueEntry    *gtk.Entry             `gtk:"hash_value_entry"`
 
-	AboutButton *gtk.ModelButton   `gtk:"about_button"`
-	AboutDialog *gtk.AboutDialog   `gtk:"about_dialog"`
 	ErrorDialog *gtk.MessageDialog `gtk:"error_dialog"`
 }
 
@@ -42,7 +40,7 @@ func New(appID, version string) *View {
 	view.Application, _ = gtk.ApplicationNew(appID, glib.APPLICATION_FLAGS_NONE)
 	view.Application.Connect("activate", func() {
 		// Load UI from resources
-		builder, err := gtk.BuilderNewFromResource("/data/ui.glade")
+		builder, err := gtk.BuilderNewFromResource("/data/" + appID + ".ui")
 		if err != nil {
 			panic(err)
 		}

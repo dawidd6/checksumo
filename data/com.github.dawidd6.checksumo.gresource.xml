@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gresources>
+  <gresource prefix="/">
+      <file preprocess="xml-stripblanks">data/com.github.dawidd6.checksumo.ui</file>
+      <file>data/com.github.dawidd6.checksumo.svg</file>
+  </gresource>
+</gresources>
