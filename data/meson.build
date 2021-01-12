@@ -1,3 +1,8 @@
+resources = gnome.compile_resources(
+    'resources', meson.project_name() + '.gresource.xml',
+    so
+)
+
 install_data(
     join_paths(meson.project_name() + '.svg'),
     install_dir: join_paths(get_option('datadir'), 'icons')
