@@ -31,6 +31,8 @@ func New(v *view.View, m *model.Model) *Controller {
 		controller.View.HashValueEntry.Connect("activate", controller.onHashEntryActivate)
 		controller.View.VerifyButton.Connect("clicked", controller.onVerifyButtonClicked)
 		controller.View.CancelButton.Connect("clicked", controller.onCancelButtonClicked)
+		controller.View.SettingsButton.Connect("clicked", controller.onSettingsButtonClicked)
+		controller.View.SaveButton.Connect("clicked", controller.onSaveButtonClicked)
 	})
 
 	return controller
@@ -52,7 +54,7 @@ func (controller *Controller) onFileButtonFileSet() {
 
 		// Update UI accordingly
 		glib.IdleAdd(func() {
-			controller.View.HeaderBar.SetSubtitle(hashType)
+			controller.View.MainHeaderBar.SetSubtitle(hashType)
 			controller.View.VerifyButton.SetSensitive(allowVerify)
 			controller.View.StatusStack.SetVisible(false)
 		})
@@ -85,7 +87,7 @@ func (controller *Controller) onVerifyButtonClicked() {
 		// Initial UI updates when verification starts
 		glib.IdleAdd(func() {
 			controller.View.ButtonStack.SetVisibleChild(controller.View.CancelButton)
-			controller.View.StatusStack.SetVisibleChild(controller.View.ProgressSpinner)
+			controller.View.StatusStack.SetVisibleChild(controller.View.StatusSpinner)
 			controller.View.StatusStack.SetVisible(true)
 			controller.View.FileChooserButton.SetSensitive(false)
 			controller.View.HashValueEntry.SetSensitive(false)
@@ -125,9 +127,9 @@ func (controller *Controller) onVerifyButtonClicked() {
 		}
 
 		// Determine result image
-		resultImage := controller.View.FailImage
+		resultImage := controller.View.StatusFailImage
 		if hashValueProvided == hashValueComputed {
-			resultImage = controller.View.OkImage
+			resultImage = controller.View.StatusOkImage
 		}
 
 		// Update UI to signalize hash comparison to user
@@ -135,4 +137,12 @@ func (controller *Controller) onVerifyButtonClicked() {
 			controller.View.StatusStack.SetVisibleChild(resultImage)
 		})
 	}()
+}
+
+func (controller *Controller) onSettingsButtonClicked() {
+	controller.View.SettingsWindow.Present()
+}
+
+func (controller *Controller) onSaveButtonClicked() {
+	controller.View.SettingsWindow.Hide()
 }
