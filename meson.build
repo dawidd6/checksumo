@@ -17,11 +17,18 @@ gnome.compile_schemas(
 )
 
 go = find_program('go', required: true)
+gobuild = [
+    'CGO_CFLAGS=I' + meson.current_build_dir(),
+    go, 'build',
+    '-tags', 'gtk_3_22',
+    '-o', meson.project_name(),
+    meson.current_source_dir()
+]
 
 custom_target(
     meson.project_name(),
     build_by_default: true,
-    command: [go, 'build', '-tags', 'gtk_3_22', '-o', meson.project_name(), meson.current_source_dir()],
+    command: gobuild,
     install: true,
     install_dir: get_option('bindir'),
     input: ['main.go'],
