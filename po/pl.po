@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.dawidd6.checksumo\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-01-12 10:38+0100\n"
+"POT-Creation-Date: 2021-01-12 11:26+0100\n"
 "PO-Revision-Date: 2021-01-12 10:38+0100\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -58,4 +58,34 @@ msgstr ""
 
 #: data/com.github.dawidd6.checksumo.appdata.xml.in:75
 msgid "Dawid Dziurla"
+msgstr ""
+
+#: data/com.github.dawidd6.checksumo.ui:29
+#: data/com.github.dawidd6.checksumo.ui:100
+msgid "page0"
+msgstr ""
+
+#: data/com.github.dawidd6.checksumo.ui:40
+#: data/com.github.dawidd6.checksumo.ui:115
+msgid "page1"
+msgstr ""
+
+#: data/com.github.dawidd6.checksumo.ui:52
+msgid "page2"
+msgstr ""
+
+#: data/com.github.dawidd6.checksumo.ui:89
+msgid "Verify"
+msgstr ""
+
+#: data/com.github.dawidd6.checksumo.ui:105
+msgid "Cancel"
+msgstr ""
+
+#: data/com.github.dawidd6.checksumo.ui:163
+msgid "Hash value"
+msgstr ""
+
+#: data/com.github.dawidd6.checksumo.ui:182
+msgid "Error"
 msgstr ""
