@@ -22,7 +22,7 @@ custom_target(
     build_by_default: true,
     build_always: true,
     command: '@0@ @1@ build @2@ -o @3@ @4@'.format(
-        go_env, go.full_path(), go_args, meson.project_name(), meson.current_source_dir()
+        go_env, go.path(), go_args, meson.project_name(), meson.current_source_dir()
     ).split(),
     install: true,
     install_dir: get_option('bindir'),
