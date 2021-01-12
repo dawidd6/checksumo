@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <gresources>
-  <gresource prefix="/">
-      <file preprocess="xml-stripblanks">com.github.dawidd6.checksumo.ui</file>
+  <gresource prefix="/com/github/dawidd6/checksumo">
+      <file preprocess="xml-stripblanks">app.ui</file>
   </gresource>
 </gresources>

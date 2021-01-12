@@ -28,17 +28,17 @@ type View struct {
 	ErrorDialog *gtk.MessageDialog `gtk:"error_dialog"`
 }
 
-func New(appID string) *View {
+func New() *View {
 	// Construct view
 	view := new(View)
 
 	// Define new signal emitted when widgets are initialized
 	glib.SignalNew("ready")
 
-	view.Application, _ = gtk.ApplicationNew(appID, glib.APPLICATION_FLAGS_NONE)
+	view.Application, _ = gtk.ApplicationNew("com.github.dawidd6.checksumo", glib.APPLICATION_FLAGS_NONE)
 	view.Application.Connect("activate", func() {
 		// Load UI from resources
-		builder, err := gtk.BuilderNewFromResource(appID + ".ui")
+		builder, err := gtk.BuilderNewFromResource("com/github/dawidd6/checksumo/app.ui")
 		if err != nil {
 			panic(err)
 		}

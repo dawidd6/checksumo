@@ -12,13 +12,9 @@ import (
 	"github.com/dawidd6/checksumo/pkg/view"
 )
 
-var (
-	AppID = "com.github.dawidd6.checksumo"
-)
-
 func main() {
 	m := model.New()
-	v := view.New(AppID)
+	v := view.New()
 	c := controller.New(v, m)
 
 	os.Exit(c.View.Application.Run(os.Args))
