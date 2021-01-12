@@ -36,6 +36,18 @@ custom_target(
     output: meson.project_name()
 )
 
+test(
+    'test',
+    go,
+    args: [
+        'test',
+        '-v',
+        '-mod', 'vendor',
+        '-tags', 'gtk_3_22',
+        join_paths(meson.current_source_dir(), '...')
+    ]
+)
+
 install_data(
     join_paths('data', meson.project_name() + '.svg'),
     install_dir: join_paths(get_option('datadir'), 'icons')
