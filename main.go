@@ -13,13 +13,12 @@ import (
 )
 
 var (
-	AppID   = "com.github.dawidd6.checksumo"
-	Version string
+	AppID = "com.github.dawidd6.checksumo"
 )
 
 func main() {
 	m := model.New()
-	v := view.New(AppID, Version)
+	v := view.New(AppID)
 	c := controller.New(v, m)
 
 	os.Exit(c.View.Application.Run(os.Args))

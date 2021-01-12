@@ -3,8 +3,6 @@ package view
 import (
 	"reflect"
 
-	"github.com/gotk3/gotk3/gdk"
-
 	"github.com/gotk3/gotk3/glib"
 	"github.com/gotk3/gotk3/gtk"
 )
@@ -30,7 +28,7 @@ type View struct {
 	ErrorDialog *gtk.MessageDialog `gtk:"error_dialog"`
 }
 
-func New(appID, version string) *View {
+func New(appID string) *View {
 	// Construct view
 	view := new(View)
 
@@ -64,22 +62,6 @@ func New(appID, version string) *View {
 
 		// Widgets are ready now
 		view.Application.Emit("ready")
-
-		// Load app icon from resources
-		icon, err := gtk.ImageNewFromResource("/data/checksumo.svg")
-		if err != nil {
-			panic(err)
-		}
-
-		// Convert icon to logo
-		logo, err := icon.GetPixbuf().ScaleSimple(128, 128, gdk.INTERP_BILINEAR)
-		if err != nil {
-			panic(err)
-		}
-
-		// Set about informations
-		view.AboutDialog.SetLogo(logo)
-		view.AboutDialog.SetVersion(version)
 
 		// Show and add main window
 		view.ApplicationWindow.Present()
