@@ -8,8 +8,8 @@ import (
 )
 
 type View struct {
-	Application       *gtk.Application
-	ApplicationWindow *gtk.ApplicationWindow `gtk:"main_window"`
+	Application *gtk.Application
+	MainWindow  *gtk.ApplicationWindow `gtk:"main_window"`
 
 	HeaderBar *gtk.HeaderBar `gtk:"header_bar"`
 
@@ -64,8 +64,8 @@ func New(appID, version string) *View {
 		view.Application.Emit("ready")
 
 		// Show and add main window
-		view.ApplicationWindow.Present()
-		view.Application.AddWindow(view.ApplicationWindow)
+		view.MainWindow.Present()
+		view.Application.AddWindow(view.MainWindow)
 	})
 
 	return view
