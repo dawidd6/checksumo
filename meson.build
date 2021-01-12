@@ -20,7 +20,7 @@ go = find_program('go', required: true)
 gobuild = [
     'CGO_CFLAGS=I' + meson.current_build_dir(),
     go, 'build',
-    '-mod, 'vendor',
+    '-mod', 'vendor',
     '-tags', 'gtk_3_22',
     '-o', meson.project_name(),
     meson.current_source_dir()
