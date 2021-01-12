@@ -31,7 +31,6 @@ func New(v *view.View, m *model.Model) *Controller {
 		controller.View.HashValueEntry.Connect("activate", controller.onHashEntryActivate)
 		controller.View.VerifyButton.Connect("clicked", controller.onVerifyButtonClicked)
 		controller.View.CancelButton.Connect("clicked", controller.onCancelButtonClicked)
-		controller.View.AboutButton.Connect("clicked", controller.onAboutButtonClicked)
 	})
 
 	return controller
@@ -136,9 +135,4 @@ func (controller *Controller) onVerifyButtonClicked() {
 			controller.View.StatusStack.SetVisibleChild(resultImage)
 		})
 	}()
-}
-
-func (controller *Controller) onAboutButtonClicked() {
-	controller.View.AboutDialog.Run()
-	controller.View.AboutDialog.Hide()
 }

@@ -1,0 +1,61 @@
+# Polish translations for com.github.dawidd6.checksumo package.
+# Copyright (C) 2021 THE com.github.dawidd6.checksumo'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the com.github.dawidd6.checksumo package.
+# Automatically generated, 2021.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: com.github.dawidd6.checksumo\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-01-12 10:38+0100\n"
+"PO-Revision-Date: 2021-01-12 10:38+0100\n"
+"Last-Translator: Automatically generated\n"
+"Language-Team: none\n"
+"Language: pl\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=ASCII\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
+"|| n%100>=20) ? 1 : 2);\n"
+
+#: data/com.github.dawidd6.checksumo.desktop.in:5
+#: data/com.github.dawidd6.checksumo.appdata.xml.in:6
+msgid "Checksumo"
+msgstr ""
+
+#: data/com.github.dawidd6.checksumo.desktop.in:6
+#: data/com.github.dawidd6.checksumo.appdata.xml.in:7
+msgid "Verify specified file against given hash"
+msgstr ""
+
+#: data/com.github.dawidd6.checksumo.desktop.in:8
+msgid "com.github.dawidd6.checksumo"
+msgstr ""
+
+#: data/com.github.dawidd6.checksumo.appdata.xml.in:9
+msgid "Automatically detects the following hash types:"
+msgstr ""
+
+#: data/com.github.dawidd6.checksumo.appdata.xml.in:11
+msgid "SHA-256"
+msgstr ""
+
+#: data/com.github.dawidd6.checksumo.appdata.xml.in:12
+msgid "SHA-512"
+msgstr ""
+
+#: data/com.github.dawidd6.checksumo.appdata.xml.in:13
+msgid "MD5"
+msgstr ""
+
+#: data/com.github.dawidd6.checksumo.appdata.xml.in:16
+msgid "Supports cancellation of verification if desired."
+msgstr ""
+
+#: data/com.github.dawidd6.checksumo.appdata.xml.in:27
+msgid "First stable release."
+msgstr ""
+
+#: data/com.github.dawidd6.checksumo.appdata.xml.in:75
+msgid "Dawid Dziurla"
+msgstr ""

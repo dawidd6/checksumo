@@ -38,7 +38,7 @@ func New(appID string) *View {
 	view.Application, _ = gtk.ApplicationNew(appID, glib.APPLICATION_FLAGS_NONE)
 	view.Application.Connect("activate", func() {
 		// Load UI from resources
-		builder, err := gtk.BuilderNewFromResource("/data/" + appID + ".ui")
+		builder, err := gtk.BuilderNewFromResource(appID + ".ui")
 		if err != nil {
 			panic(err)
 		}
