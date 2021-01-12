@@ -8,19 +8,25 @@ import (
 )
 
 type View struct {
-	Application *gtk.Application
-	MainWindow  *gtk.ApplicationWindow `gtk:"main_window"`
+	Application    *gtk.Application
+	MainWindow     *gtk.ApplicationWindow `gtk:"main_window"`
+	SettingsWindow *gtk.Window            `gtk:"settings_window"`
 
-	HeaderBar *gtk.HeaderBar `gtk:"header_bar"`
+	MainHeaderBar     *gtk.HeaderBar `gtk:"main_header_bar"`
+	SettingsHeaderBar *gtk.HeaderBar `gtk:"settings_header_bar"`
 
-	StatusStack     *gtk.Stack   `gtk:"status_stack"`
-	OkImage         *gtk.Image   `gtk:"ok_image"`
-	FailImage       *gtk.Image   `gtk:"fail_image"`
-	ProgressSpinner *gtk.Spinner `gtk:"progress_spinner"`
+	ButtonStack *gtk.Stack `gtk:"button_stack"`
+	StatusStack *gtk.Stack `gtk:"status_stack"`
 
-	ButtonStack  *gtk.Stack  `gtk:"button_stack"`
-	VerifyButton *gtk.Button `gtk:"verify_button"`
-	CancelButton *gtk.Button `gtk:"cancel_button"`
+	StatusOkImage   *gtk.Image `gtk:"status_ok_image"`
+	StatusFailImage *gtk.Image `gtk:"status_fail_image"`
+
+	StatusSpinner *gtk.Spinner `gtk:"status_spinner"`
+
+	VerifyButton   *gtk.Button `gtk:"verify_button"`
+	CancelButton   *gtk.Button `gtk:"cancel_button"`
+	SaveButton     *gtk.Button `gtk:"save_button"`
+	SettingsButton *gtk.Button `gtk:"settings_button"`
 
 	FileChooserButton *gtk.FileChooserButton `gtk:"file_chooser_button"`
 	HashValueEntry    *gtk.Entry             `gtk:"hash_value_entry"`
