@@ -8,14 +8,12 @@ go_gtk_tag = 'gtk_3_22'
 go_env = 'CGO_CFLAGS=-I@0@'.format(meson.current_build_dir())
 go_args = '-v -mod=vendor -tags=@0@'.format(go_gtk_tag)
 
-resources = gnome.compile_resources(
-    'resources', join_paths('data', meson.project_name() + '.gresource.xml'),
-    source_dir: 'data'
-)
-
 dependency('gtk+-3.0', version : '>=3.22')
 dependency('glib-2.0')
 dependency('gio-2.0')
+
+subdir('data')
+subdir('po')
 
 custom_target(
     meson.project_name(),
@@ -38,9 +36,6 @@ test(
     ).split(),
     env: go_env,
 )
-
-subdir('data')
-subdir('po')
 
 meson.add_install_script('meson/post_install.sh')
 
