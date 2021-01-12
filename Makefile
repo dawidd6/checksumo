@@ -23,10 +23,10 @@ po-init:
 po-update:
 	msgmerge --update po/pl.po po/default.pot
 
-po-compile:
+po-build:
 	msgfmt --output-file po/pl.mo po/pl.po
 
-install:
+install: po-build
 	install -D -m755 $(APP) $(DESTDIR)$(PREFIX)/bin/$(APP)
 	install -D -m644 data/$(APP).desktop $(DESTDIR)$(PREFIX)/share/applications/$(APP_ID).desktop
 	install -D -m644 data/$(APP).svg $(DESTDIR)$(PREFIX)/share/icons/$(APP_ID).svg
