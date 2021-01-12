@@ -2,6 +2,5 @@
 <gresources>
   <gresource prefix="/">
       <file preprocess="xml-stripblanks">data/com.github.dawidd6.checksumo.ui</file>
-      <file>data/com.github.dawidd6.checksumo.svg</file>
   </gresource>
 </gresources>
