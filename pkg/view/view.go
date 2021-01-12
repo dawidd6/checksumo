@@ -28,7 +28,7 @@ type View struct {
 	ErrorDialog *gtk.MessageDialog `gtk:"error_dialog"`
 }
 
-func New(appID, version string) *View {
+func New(appID string) *View {
 	// Construct view
 	view := new(View)
 
@@ -47,7 +47,9 @@ func New(appID, version string) *View {
 		viewStruct := reflect.ValueOf(view).Elem()
 		for i := 0; i < viewStruct.NumField(); i++ {
 			field := viewStruct.Field(i)
-			widget := viewStruct.Type().Field(i).Tag.Get("gtk")
+			structField := viewStruct.Type().Field(i)
+			widget := structField.Tag.Get("gtk")
+
 			if widget == "" {
 				continue
 			}
