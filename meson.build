@@ -38,6 +38,13 @@ install_data(
     install_dir: join_paths(get_option('datadir'), 'glib-2.0', 'schemas')
 )
 
+i18n.gettext(meson.project_name(),
+  args: [
+    '--directory=' + meson.source_root(),
+    '--from-code=UTF-8'
+  ]
+)
+
 i18n.merge_file(
     input: join_paths('data', meson.project_name() + '.desktop.in'),
     output: meson.project_name() + '.desktop',
