@@ -3,8 +3,6 @@ package view
 import (
 	"reflect"
 
-	"github.com/gotk3/gotk3/gdk"
-
 	"github.com/gotk3/gotk3/glib"
 	"github.com/gotk3/gotk3/gtk"
 )
@@ -27,8 +25,6 @@ type View struct {
 	FileChooserButton *gtk.FileChooserButton `gtk:"file_chooser_button"`
 	HashValueEntry    *gtk.Entry             `gtk:"hash_value_entry"`
 
-	AboutButton *gtk.ModelButton   `gtk:"about_button"`
-	AboutDialog *gtk.AboutDialog   `gtk:"about_dialog"`
 	ErrorDialog *gtk.MessageDialog `gtk:"error_dialog"`
 }
 
@@ -42,7 +38,7 @@ func New(appID, version string) *View {
 	view.Application, _ = gtk.ApplicationNew(appID, glib.APPLICATION_FLAGS_NONE)
 	view.Application.Connect("activate", func() {
 		// Load UI from resources
-		builder, err := gtk.BuilderNewFromResource("/data/ui.glade")
+		builder, err := gtk.BuilderNewFromResource("/data/checksumo.ui")
 		if err != nil {
 			panic(err)
 		}
@@ -66,22 +62,6 @@ func New(appID, version string) *View {
 
 		// Widgets are ready now
 		view.Application.Emit("ready")
-
-		// Load app icon from resources
-		icon, err := gtk.ImageNewFromResource("/data/checksumo.svg")
-		if err != nil {
-			panic(err)
-		}
-
-		// Convert icon to logo
-		logo, err := icon.GetPixbuf().ScaleSimple(128, 128, gdk.INTERP_BILINEAR)
-		if err != nil {
-			panic(err)
-		}
-
-		// Set about informations
-		view.AboutDialog.SetLogo(logo)
-		view.AboutDialog.SetVersion(version)
 
 		// Show and add main window
 		view.ApplicationWindow.Present()

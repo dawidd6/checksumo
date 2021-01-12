@@ -1,23 +1,28 @@
-PREFIX ?= /usr
-
-PROGRAM ?= checksumo
-VERSION ?= $(shell git describe --tags 2>/dev/null || git rev-parse HEAD)
-
-GOTK_TAG ?= gtk_3_22
+PREFIX = /usr
+APP = checksumo
+APP_ID = com.github.dawidd6.checksumo
+GOTK_TAG = gtk_3_22
+GO_FLAGS = -v -mod=vendor -tags=$(GOTK_TAG)
 
 build:
-	glib-compile-resources --target=resources.h --generate-source data/data.gresource.xml
-	go build -mod=vendor -tags $(GOTK_TAG) -v -o $(PROGRAM) -ldflags "-s -w -X main.Version=$(VERSION)"
+	glib-compile-resources --target=resources.h --generate-source data/$(APP).gresource.xml
+	go build $(GO_FLAGS) -o $(APP)
 
 test:
-	go test -mod=vendor -tags $(GOTK_TAG) -v -count=1 ./...
+	go test $(GO_FLAGS) ./...
+
+fmt:
+	gofmt -w $(shell find . -name '*.go' -not -path './vendor/*')
 
 install:
-	install -D -m755 $(PROGRAM) $(DESTDIR)$(PREFIX)/bin/$(PROGRAM)
-	install -D -m644 data/$(PROGRAM).desktop $(DESTDIR)$(PREFIX)/share/applications/$(PROGRAM).desktop
-	install -D -m644 data/$(PROGRAM).svg $(DESTDIR)$(PREFIX)/share/icons/$(PROGRAM).svg
+	install -D -m755 $(APP) $(DESTDIR)$(PREFIX)/bin/$(APP)
+	install -D -m644 data/$(APP).desktop $(DESTDIR)$(PREFIX)/share/applications/$(APP_ID).desktop
+	install -D -m644 data/$(APP).svg $(DESTDIR)$(PREFIX)/share/icons/$(APP_ID).svg
+	install -D -m644 data/$(APP).gschema.xml $(DESTDIR)$(PREFIX)/share/glib-2.0/schemas/$(APP_ID).gschema.xml
+	glib-compile-schemas $(DESTDIR)$(PREFIX)/share/glib-2.0/schemas
 
 uninstall:
-	rm -f $(DESTDIR)$(PREFIX)/bin/$(PROGRAM)
-	rm -f $(DESTDIR)$(PREFIX)/share/applications/$(PROGRAM).desktop
-	rm -f $(DESTDIR)$(PREFIX)/share/icons/$(PROGRAM).svg
+	rm -f $(DESTDIR)$(PREFIX)/bin/$(APP)
+	rm -f $(DESTDIR)$(PREFIX)/share/applications/$(APP_ID).desktop
+	rm -f $(DESTDIR)$(PREFIX)/share/icons/$(APP_ID).svg
+	rm -f $(DESTDIR)$(PREFIX)/share/glib-2.0/schemas/$(APP_ID).gschema.xml

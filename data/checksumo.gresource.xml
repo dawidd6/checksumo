@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <gresources>
   <gresource prefix="/">
-      <file preprocess="xml-stripblanks">data/ui.glade</file>
-      <file>data/checksumo.svg</file>
+      <file preprocess="xml-stripblanks">data/checksumo.ui</file>
   </gresource>
 </gresources>

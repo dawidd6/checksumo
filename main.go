@@ -8,6 +8,10 @@ import (
 	"github.com/dawidd6/checksumo/pkg/view"
 )
 
+// #cgo pkg-config: gio-2.0
+// #include "resources.h"
+import "C"
+
 var (
 	AppID   = "com.github.dawidd6.checksumo"
 	Version string
