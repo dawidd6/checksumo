@@ -41,6 +41,9 @@ func New(appID string) *View {
 	// Define new signal emitted when widgets are initialized
 	glib.SignalNew("ready")
 
+	// Initialize localization
+	glib.InitI18n(appID, "/usr/share/locales")
+
 	view.Application, _ = gtk.ApplicationNew(appID, glib.APPLICATION_FLAGS_NONE)
 	view.Application.Connect("activate", func() {
 		// Load UI from resources
