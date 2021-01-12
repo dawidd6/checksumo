@@ -24,9 +24,9 @@ jobs:
           restore-keys: ${{runner.os}}-go-build
       - name: Build and test
         run: |
-          meson setup build
-          meson -C build compile
-          meson -C build test
+          meson build
+          ninja -C build
+          ninja -C build test
   package:
     runs-on: ubuntu-latest
     steps:
