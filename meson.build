@@ -68,3 +68,5 @@ i18n.merge_file(
     install: true,
     install_dir: join_paths(get_option('datadir'), 'metainfo')
 )
+
+meson.add_install_script('meson/post_install.sh')
