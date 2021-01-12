@@ -23,7 +23,9 @@ jobs:
           key: ${{runner.os}}-go-build-${{hashFiles('**/*.go')}}
           restore-keys: ${{runner.os}}-go-build
       - name: Build binary
-        run: make
+        run: |
+          meson build
+          ninja -C build
       - name: Test code
         run: make test
   package:
