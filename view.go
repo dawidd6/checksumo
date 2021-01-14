@@ -13,10 +13,9 @@ import (
 )
 
 var (
-	// TODO set via ldflags
-	AppName   = "checksumo"
-	AppID     = "com.github.dawidd6.checksumo"
-	LocaleDir = "/usr/share/locale"
+	AppName   string
+	AppID     string
+	LocaleDir string
 )
 
 type View struct {
