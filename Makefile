@@ -3,6 +3,10 @@ APP = checksumo
 APP_ID = com.github.dawidd6.checksumo
 GOTK_TAG = gtk_3_22
 GO_FLAGS = -v -mod=vendor -tags=$(GOTK_TAG)
+POTFILES = \
+	data/checksumo.ui
+LANGUAGES = \
+	pl
 
 build:
 	glib-compile-resources --target=resources.h --generate-source data/$(APP).gresource.xml
@@ -15,16 +19,16 @@ fmt:
 	gofmt -w $(shell find . -name '*.go' -not -path './vendor/*')
 
 po-extract:
-	xgettext --files-from po/POTFILES --output po/default.pot
+	xgettext --output po/default.pot $(POTFILES)
 
 po-init:
-	msginit --no-translator --input po/default.pot --output po/pl.po --locale pl
+	$(foreach LANG,$(LANGUAGES),msginit --no-translator --input po/default.pot --output po/$(LANG).po --locale $(LANG))
 
 po-update:
-	msgmerge --update po/pl.po po/default.pot
+	$(foreach LANG,$(LANGUAGES),msgmerge --backup off --update po/$(LANG).po po/default.pot)
 
 po-build:
-	msgfmt --output-file po/pl.mo po/pl.po
+	$(foreach LANG,$(LANGUAGES),msgfmt --output-file po/$(LANG).mo po/$(LANG).po)
 
 install: po-build
 	install -D -m755 $(APP) $(DESTDIR)$(PREFIX)/bin/$(APP)
