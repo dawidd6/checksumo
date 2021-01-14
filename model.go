@@ -19,25 +19,14 @@ type Model struct {
 	filePath     string
 	hashType     string
 
-	ctx        context.Context
-	cancelFunc context.CancelFunc
-	resultFunc func(bool, error)
+	ctx          context.Context
+	cancelFunc   context.CancelFunc
+	resultFunc   func(bool, error)
+	progressFunc func(float32)
 }
 
 func NewModel() *Model {
 	return &Model{}
-}
-
-func (model *Model) SetProvidedHash(providedHash string) {
-	model.providedHash = providedHash
-}
-
-func (model *Model) SetFilePath(filePath string) {
-	model.filePath = filePath
-}
-
-func (model *Model) SetResultFunc(f func(bool, error)) {
-	model.resultFunc = f
 }
 
 func (model *Model) DetectProvidedHashType() string {
@@ -63,10 +52,6 @@ func (model *Model) IsGoodToGo() bool {
 	return model.hashType != "" && model.filePath != "" && model.providedHash != ""
 }
 
-func (model *Model) IsCancelled() bool {
-	return model.ctx.Err() == context.Canceled
-}
-
 func (model *Model) CreateContext() {
 	model.ctx, model.cancelFunc = context.WithCancel(context.Background())
 }
@@ -79,7 +64,12 @@ func (model *Model) StartHashing() {
 	// Open file
 	file, err := os.OpenFile(model.filePath, os.O_RDONLY, 0666)
 	if err != nil {
-		panic(err)
+		return
+	}
+
+	stat, err := file.Stat()
+	if err != nil {
+		return
 	}
 
 	// On exit
@@ -91,6 +81,11 @@ func (model *Model) StartHashing() {
 		file.Close()
 	}()
 
+	//bufferSize := int64(32 * 1024)
+	fileSize := stat.Size()
+	processedBytes := int64(0)
+	bufferSize := fileSize / 100
+
 	// Read file
 	for {
 		// Check if context were cancelled
@@ -101,23 +96,27 @@ func (model *Model) StartHashing() {
 		default:
 		}
 
-		// Define 32kB buffer
-		buffer := make([]byte, 32*1024)
+		// Define buffer
+		buffer := make([]byte, bufferSize)
 
 		// Read bytes
-		n, err := file.Read(buffer)
+		readBytes, err := file.Read(buffer)
 		if err == io.EOF {
+			err = nil
 			break
 		}
 		if err != nil {
-			panic(err)
+			return
 		}
-		buffer = buffer[:n]
+		buffer = buffer[:readBytes]
 
 		// Write bytes to hasher
-		n, err = model.hasher.Write(buffer)
+		readBytes, err = model.hasher.Write(buffer)
 		if err != nil {
-			panic(err)
+			return
 		}
+		processedBytes += int64(readBytes)
+
+		model.progressFunc(float32(processedBytes) / float32(fileSize))
 	}
 }

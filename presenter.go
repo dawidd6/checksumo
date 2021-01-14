@@ -2,6 +2,8 @@ package main
 
 import (
 	"context"
+
+	"github.com/gotk3/gotk3/glib"
 )
 
 type Presenter struct {
@@ -16,32 +18,26 @@ func NewPresenter(view *View) *Presenter {
 	}
 }
 
-func (presenter *Presenter) SetFileOrHash() {
-	// Update UI accordingly
-}
-
 func (presenter *Presenter) SetFile() {
-	filePath := presenter.view.FileChooserButton.GetFilename()
+	presenter.model.filePath = presenter.view.FileChooserButton.GetFilename()
 
-	presenter.model.SetFilePath(filePath)
 	hashType := presenter.model.DetectProvidedHashType()
 	isGood := presenter.model.IsGoodToGo()
 
 	presenter.view.MainHeaderBar.SetSubtitle(hashType)
 	presenter.view.VerifyButton.SetSensitive(isGood)
-	presenter.view.StatusStack.SetVisible(false)
+	presenter.view.HashValueEntry.SetProgressFraction(0.0)
 }
 
 func (presenter *Presenter) SetHash() {
-	hashValue, _ := presenter.view.HashValueEntry.GetText()
+	presenter.model.providedHash, _ = presenter.view.HashValueEntry.GetText()
 
-	presenter.model.SetProvidedHash(hashValue)
 	hashType := presenter.model.DetectProvidedHashType()
 	isGood := presenter.model.IsGoodToGo()
 
 	presenter.view.MainHeaderBar.SetSubtitle(hashType)
 	presenter.view.VerifyButton.SetSensitive(isGood)
-	presenter.view.StatusStack.SetVisible(false)
+	presenter.view.HashValueEntry.SetProgressFraction(0.0)
 }
 
 func (presenter *Presenter) StopHashing() {
@@ -52,28 +48,33 @@ func (presenter *Presenter) StartHashing() {
 	presenter.model.CreateContext()
 
 	presenter.view.ButtonStack.SetVisibleChild(presenter.view.CancelButton)
-	presenter.view.StatusStack.SetVisibleChild(presenter.view.StatusSpinner)
-	presenter.view.StatusStack.SetVisible(true)
 	presenter.view.FileChooserButton.SetSensitive(false)
 	presenter.view.HashValueEntry.SetSensitive(false)
 
-	presenter.model.SetResultFunc(func(ok bool, err error) {
-		if err == context.Canceled {
-			presenter.view.StatusStack.SetVisible(false)
-		} else if err != nil {
-			presenter.view.ErrorDialog.FormatSecondaryText(err.Error())
-			presenter.view.ErrorDialog.Run()
-			presenter.view.ErrorDialog.Hide()
-		} else if ok {
-			presenter.view.StatusStack.SetVisibleChild(presenter.view.StatusOkImage)
-		} else {
-			presenter.view.StatusStack.SetVisibleChild(presenter.view.StatusFailImage)
-		}
+	presenter.model.resultFunc = func(ok bool, err error) {
+		glib.IdleAdd(func() {
+			if err == context.Canceled {
+			} else if err != nil {
+				presenter.view.ErrorDialog.FormatSecondaryText(err.Error())
+				presenter.view.ErrorDialog.Run()
+				presenter.view.ErrorDialog.Hide()
+			} else if ok {
+				presenter.view.ResultOkDialog.Run()
+				presenter.view.ResultOkDialog.Hide()
+			} else {
+				presenter.view.ResultFailDialog.Run()
+				presenter.view.ResultFailDialog.Hide()
+			}
 
-		presenter.view.ButtonStack.SetVisibleChild(presenter.view.VerifyButton)
-		presenter.view.FileChooserButton.SetSensitive(true)
-		presenter.view.HashValueEntry.SetSensitive(true)
-	})
+			presenter.view.ButtonStack.SetVisibleChild(presenter.view.VerifyButton)
+			presenter.view.FileChooserButton.SetSensitive(true)
+			presenter.view.HashValueEntry.SetSensitive(true)
+		})
+	}
+
+	presenter.model.progressFunc = func(progressFraction float32) {
+		glib.IdleAdd(presenter.view.HashValueEntry.SetProgressFraction, progressFraction)
+	}
 
 	go presenter.model.StartHashing()
 }

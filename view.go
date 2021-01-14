@@ -29,12 +29,6 @@ type View struct {
 	SettingsHeaderBar *gtk.HeaderBar `gtk:"settings_header_bar"`
 
 	ButtonStack *gtk.Stack `gtk:"button_stack"`
-	StatusStack *gtk.Stack `gtk:"status_stack"`
-
-	StatusOkImage   *gtk.Image `gtk:"status_ok_image"`
-	StatusFailImage *gtk.Image `gtk:"status_fail_image"`
-
-	StatusSpinner *gtk.Spinner `gtk:"status_spinner"`
 
 	VerifyButton   *gtk.Button `gtk:"verify_button"`
 	CancelButton   *gtk.Button `gtk:"cancel_button"`
@@ -44,7 +38,9 @@ type View struct {
 	FileChooserButton *gtk.FileChooserButton `gtk:"file_chooser_button"`
 	HashValueEntry    *gtk.Entry             `gtk:"hash_value_entry"`
 
-	ErrorDialog *gtk.MessageDialog `gtk:"error_dialog"`
+	ErrorDialog      *gtk.MessageDialog `gtk:"error_dialog"`
+	ResultOkDialog   *gtk.MessageDialog `gtk:"result_ok_dialog"`
+	ResultFailDialog *gtk.MessageDialog `gtk:"result_fail_dialog"`
 }
 
 func NewView() *View {
