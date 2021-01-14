@@ -7,6 +7,13 @@ import (
 	"github.com/gotk3/gotk3/gtk"
 )
 
+var (
+	// TODO set via ldflags
+	AppName   = "checksumo"
+	AppID     = "com.github.dawidd6.checksumo"
+	LocaleDir = "/usr/share/locale"
+)
+
 type View struct {
 	Application    *gtk.Application
 	MainWindow     *gtk.ApplicationWindow `gtk:"main_window"`
@@ -34,7 +41,7 @@ type View struct {
 	ErrorDialog *gtk.MessageDialog `gtk:"error_dialog"`
 }
 
-func New(appID string) *View {
+func New() *View {
 	// Construct view
 	view := new(View)
 
@@ -42,9 +49,9 @@ func New(appID string) *View {
 	glib.SignalNew("ready")
 
 	// Initialize localization
-	glib.InitI18n(appID, "/usr/share/locales")
+	glib.InitI18n(AppName, LocaleDir)
 
-	view.Application, _ = gtk.ApplicationNew(appID, glib.APPLICATION_FLAGS_NONE)
+	view.Application, _ = gtk.ApplicationNew(AppID, glib.APPLICATION_FLAGS_NONE)
 	view.Application.Connect("activate", func() {
 		// Load UI from resources
 		builder, err := gtk.BuilderNewFromResource("/data/checksumo.ui")
