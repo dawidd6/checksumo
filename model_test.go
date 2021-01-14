@@ -16,7 +16,7 @@ func TestModel_DetectProvidedHashType(t *testing.T) {
 	}
 
 	for hashVal, expectedHashType := range cases {
-		model.SetProvidedHash(hashVal)
+		model.providedHash = hashVal
 		gotHashType := model.DetectProvidedHashType()
 		assert.Equal(t, expectedHashType, gotHashType)
 	}
