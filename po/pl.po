@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: dawidd 6\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-01-13 20:42+0100\n"
+"POT-Creation-Date: 2021-01-14 21:54+0100\n"
 "PO-Revision-Date: 2021-01-13 20:42+0100\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -18,38 +18,43 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
 "|| n%100>=20) ? 1 : 2);\n"
 
-#: data/checksumo.ui:30 data/checksumo.ui:102
-msgid "page0"
-msgstr ""
-
-#: data/checksumo.ui:42 data/checksumo.ui:117
-msgid "page1"
-msgstr ""
-
-#: data/checksumo.ui:54
-msgid "page2"
-msgstr ""
-
-#: data/checksumo.ui:91
+#: data/checksumo.ui:53
 msgid "Verify"
 msgstr "Weryfikuj"
 
-#: data/checksumo.ui:107
+#: data/checksumo.ui:64
+msgid "page0"
+msgstr ""
+
+#: data/checksumo.ui:69
 msgid "Cancel"
 msgstr ""
 
-#: data/checksumo.ui:171
+#: data/checksumo.ui:79
+msgid "page1"
+msgstr ""
+
+#: data/checksumo.ui:134
 msgid "Hash value"
 msgstr "Wartość hash'a"
 
-#: data/checksumo.ui:192
+#: data/checksumo.ui:155
 msgid "Error"
 msgstr ""
 
-#: data/checksumo.ui:224
+#: data/checksumo.ui:187
 msgid "Preferences"
 msgstr ""
 
-#: data/checksumo.ui:233
+#: data/checksumo.ui:196
 msgid "Save"
 msgstr ""
+
+#: data/checksumo.ui:235
+msgid "Hash mismatch"
+msgstr ""
+
+#: data/checksumo.ui:277
+#, fuzzy
+msgid "Hash match"
+msgstr "Wartość hash'a"
