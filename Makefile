@@ -37,6 +37,7 @@ install: po-build
 	install -D -m644 data/$(APP).gschema.xml $(DESTDIR)$(PREFIX)/share/glib-2.0/schemas/$(APP_ID).gschema.xml
 	install -D -m644 data/$(APP).appdata.xml $(DESTDIR)$(PREFIX)/share/metainfo/$(APP_ID).appdata.xml
 	install -D -m644 po/pl.mo $(DESTDIR)$(PREFIX)/share/locale/pl/LC_MESSAGES/$(APP).mo
+	$(foreach LANG,$(LANGUAGES),install -D -m644 po/$(LANG).mo $(DESTDIR)$(PREFIX)/share/locale/$(LANG)/LC_MESSAGES/$(APP).mo)
 	glib-compile-schemas $(DESTDIR)$(PREFIX)/share/glib-2.0/schemas
 
 uninstall:
@@ -45,3 +46,4 @@ uninstall:
 	rm -f $(DESTDIR)$(PREFIX)/share/icons/$(APP_ID).svg
 	rm -f $(DESTDIR)$(PREFIX)/share/glib-2.0/schemas/$(APP_ID).gschema.xml
 	rm -f $(DESTDIR)$(PREFIX)/share/metainfo/$(APP_ID).appdata.xml
+	$(foreach LANG,$(LANGUAGES),rm -f $(DESTDIR)$(PREFIX)/share/locale/$(LANG)/LC_MESSAGES/$(APP).mo)
