@@ -28,7 +28,7 @@ msgstr ""
 
 #: data/checksumo.ui:69
 msgid "Cancel"
-msgstr ""
+msgstr "Anuluj"
 
 #: data/checksumo.ui:79
 msgid "page1"
@@ -40,21 +40,21 @@ msgstr "Wartość hash'a"
 
 #: data/checksumo.ui:155
 msgid "Error"
-msgstr ""
+msgstr "Błąd"
 
 #: data/checksumo.ui:187
 msgid "Preferences"
-msgstr ""
+msgstr "Preferencje"
 
 #: data/checksumo.ui:196
 msgid "Save"
-msgstr ""
+msgstr "Zapisz"
 
 #: data/checksumo.ui:235
 msgid "Hash mismatch"
-msgstr ""
+msgstr "Niezgodność hash'a"
 
 #: data/checksumo.ui:277
 #, fuzzy
 msgid "Hash match"
-msgstr "Wartość hash'a"
+msgstr "Zgodność hash'a"
