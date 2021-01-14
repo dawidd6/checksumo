@@ -1,4 +1,4 @@
-package model
+package main
 
 import (
 	"testing"
@@ -6,8 +6,8 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestDetectType(t *testing.T) {
-	model := New()
+func TestModel_DetectProvidedHashType(t *testing.T) {
+	model := NewModel()
 
 	cases := map[string]string{
 		"f3a306f40e4a313fb5a584d73b3dee8f":                                 "MD5",
@@ -16,7 +16,8 @@ func TestDetectType(t *testing.T) {
 	}
 
 	for hashVal, expectedHashType := range cases {
-		gotHashType := model.DetectType(hashVal)
+		model.SetProvidedHash(hashVal)
+		gotHashType := model.DetectProvidedHashType()
 		assert.Equal(t, expectedHashType, gotHashType)
 	}
 }

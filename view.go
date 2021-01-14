@@ -1,6 +1,11 @@
-package view
+package main
+
+// #cgo pkg-config: gio-2.0
+// #include "resources.h"
+import "C"
 
 import (
+	"os"
 	"reflect"
 
 	"github.com/gotk3/gotk3/glib"
@@ -15,7 +20,8 @@ var (
 )
 
 type View struct {
-	Application    *gtk.Application
+	Application *gtk.Application
+
 	MainWindow     *gtk.ApplicationWindow `gtk:"main_window"`
 	SettingsWindow *gtk.Window            `gtk:"settings_window"`
 
@@ -41,12 +47,9 @@ type View struct {
 	ErrorDialog *gtk.MessageDialog `gtk:"error_dialog"`
 }
 
-func New() *View {
-	// Construct view
+func NewView() *View {
 	view := new(View)
-
-	// Define new signal emitted when widgets are initialized
-	glib.SignalNew("ready")
+	presenter := NewPresenter(view)
 
 	// Initialize localization
 	glib.InitI18n(AppName, LocaleDir)
@@ -60,10 +63,10 @@ func New() *View {
 		}
 
 		// Get widgets from UI definition
-		viewStruct := reflect.ValueOf(view).Elem()
-		for i := 0; i < viewStruct.NumField(); i++ {
-			field := viewStruct.Field(i)
-			structField := viewStruct.Type().Field(i)
+		vStruct := reflect.ValueOf(view).Elem()
+		for i := 0; i < vStruct.NumField(); i++ {
+			field := vStruct.Field(i)
+			structField := vStruct.Type().Field(i)
 			widget := structField.Tag.Get("gtk")
 
 			if widget == "" {
@@ -78,8 +81,14 @@ func New() *View {
 			field.Set(reflect.ValueOf(obj).Convert(field.Type()))
 		}
 
-		// Widgets are ready now
-		view.Application.Emit("ready")
+		// Connect handlers to signals when widgets are ready
+		view.FileChooserButton.Connect("file-set", presenter.SetFile)
+		view.HashValueEntry.Connect("changed", presenter.SetHash)
+		view.HashValueEntry.Connect("activate", presenter.StartHashing)
+		view.VerifyButton.Connect("clicked", presenter.StartHashing)
+		view.CancelButton.Connect("clicked", presenter.StopHashing)
+		view.SettingsButton.Connect("clicked", view.SettingsWindow.Present)
+		view.SaveButton.Connect("clicked", view.SettingsWindow.Hide)
 
 		// Show and add main window
 		view.MainWindow.Present()
@@ -87,4 +96,8 @@ func New() *View {
 	})
 
 	return view
+}
+
+func (view *View) Show() int {
+	return view.Application.Run(os.Args)
 }
