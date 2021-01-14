@@ -14,7 +14,6 @@
           <object class="GtkBox">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
-            <property name="spacing">6</property>
             <child>
               <object class="GtkButton" id="settings_button">
                 <property name="visible">True</property>
@@ -32,9 +31,19 @@
               <packing>
                 <property name="expand">False</property>
                 <property name="fill">True</property>
-                <property name="position">1</property>
+                <property name="position">0</property>
               </packing>
             </child>
+          </object>
+          <packing>
+            <property name="position">1</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkBox">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="spacing">6</property>
             <child>
               <object class="GtkStack" id="button_stack">
                 <property name="visible">True</property>
@@ -121,6 +130,7 @@
             <property name="vexpand">True</property>
             <property name="max_length">128</property>
             <property name="width_chars">64</property>
+            <property name="progress_pulse_step">0</property>
             <property name="placeholder_text" translatable="yes">Hash value</property>
           </object>
           <packing>
@@ -153,78 +163,6 @@
             <property name="can_focus">False</property>
             <property name="homogeneous">True</property>
             <property name="layout_style">end</property>
-          </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">False</property>
-            <property name="position">0</property>
-          </packing>
-        </child>
-      </object>
-    </child>
-  </object>
-  <object class="GtkMessageDialog" id="result_fail_dialog">
-    <property name="can_focus">False</property>
-    <property name="window_position">center-on-parent</property>
-    <property name="type_hint">dialog</property>
-    <property name="gravity">center</property>
-    <property name="transient_for">main_window</property>
-    <property name="message_type">other</property>
-    <property name="image">result_fail_image</property>
-    <property name="buttons">close</property>
-    <property name="text" translatable="yes">Hash mismatch</property>
-    <child internal-child="vbox">
-      <object class="GtkBox">
-        <property name="can_focus">False</property>
-        <property name="orientation">vertical</property>
-        <property name="spacing">2</property>
-        <child internal-child="action_area">
-          <object class="GtkButtonBox">
-            <property name="can_focus">False</property>
-            <property name="homogeneous">True</property>
-            <property name="layout_style">end</property>
-            <child>
-              <placeholder/>
-            </child>
-            <child>
-              <placeholder/>
-            </child>
-          </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">False</property>
-            <property name="position">0</property>
-          </packing>
-        </child>
-      </object>
-    </child>
-  </object>
-  <object class="GtkMessageDialog" id="result_ok_dialog">
-    <property name="can_focus">False</property>
-    <property name="window_position">center-on-parent</property>
-    <property name="type_hint">dialog</property>
-    <property name="gravity">center</property>
-    <property name="transient_for">main_window</property>
-    <property name="message_type">other</property>
-    <property name="image">result_ok_image</property>
-    <property name="buttons">close</property>
-    <property name="text" translatable="yes">Hash match</property>
-    <child internal-child="vbox">
-      <object class="GtkBox">
-        <property name="can_focus">False</property>
-        <property name="orientation">vertical</property>
-        <property name="spacing">2</property>
-        <child internal-child="action_area">
-          <object class="GtkButtonBox">
-            <property name="can_focus">False</property>
-            <property name="homogeneous">True</property>
-            <property name="layout_style">end</property>
-            <child>
-              <placeholder/>
-            </child>
-            <child>
-              <placeholder/>
-            </child>
           </object>
           <packing>
             <property name="expand">False</property>
@@ -286,10 +224,82 @@
     <property name="icon_name">emblem-unreadable</property>
     <property name="icon_size">6</property>
   </object>
+  <object class="GtkMessageDialog" id="result_fail_dialog">
+    <property name="can_focus">False</property>
+    <property name="window_position">center-on-parent</property>
+    <property name="type_hint">dialog</property>
+    <property name="gravity">center</property>
+    <property name="transient_for">main_window</property>
+    <property name="message_type">other</property>
+    <property name="buttons">close</property>
+    <property name="text" translatable="yes">Hash mismatch</property>
+    <property name="image">result_fail_image</property>
+    <child internal-child="vbox">
+      <object class="GtkBox">
+        <property name="can_focus">False</property>
+        <property name="orientation">vertical</property>
+        <property name="spacing">2</property>
+        <child internal-child="action_area">
+          <object class="GtkButtonBox">
+            <property name="can_focus">False</property>
+            <property name="homogeneous">True</property>
+            <property name="layout_style">end</property>
+            <child>
+              <placeholder/>
+            </child>
+            <child>
+              <placeholder/>
+            </child>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">False</property>
+            <property name="position">0</property>
+          </packing>
+        </child>
+      </object>
+    </child>
+  </object>
   <object class="GtkImage" id="result_ok_image">
     <property name="visible">True</property>
     <property name="can_focus">False</property>
     <property name="icon_name">emblem-default</property>
     <property name="icon_size">6</property>
+  </object>
+  <object class="GtkMessageDialog" id="result_ok_dialog">
+    <property name="can_focus">False</property>
+    <property name="window_position">center-on-parent</property>
+    <property name="type_hint">dialog</property>
+    <property name="gravity">center</property>
+    <property name="transient_for">main_window</property>
+    <property name="message_type">other</property>
+    <property name="buttons">close</property>
+    <property name="text" translatable="yes">Hash match</property>
+    <property name="image">result_ok_image</property>
+    <child internal-child="vbox">
+      <object class="GtkBox">
+        <property name="can_focus">False</property>
+        <property name="orientation">vertical</property>
+        <property name="spacing">2</property>
+        <child internal-child="action_area">
+          <object class="GtkButtonBox">
+            <property name="can_focus">False</property>
+            <property name="homogeneous">True</property>
+            <property name="layout_style">end</property>
+            <child>
+              <placeholder/>
+            </child>
+            <child>
+              <placeholder/>
+            </child>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">False</property>
+            <property name="position">0</property>
+          </packing>
+        </child>
+      </object>
+    </child>
   </object>
 </interface>

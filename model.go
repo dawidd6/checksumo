@@ -19,10 +19,12 @@ type Model struct {
 	filePath     string
 	hashType     string
 
-	ctx          context.Context
-	cancelFunc   context.CancelFunc
-	resultFunc   func(bool, error)
-	progressFunc func(float32)
+	totalSize   int64
+	currentSize int64
+
+	ctx        context.Context
+	cancelFunc context.CancelFunc
+	resultFunc func(bool, error)
 }
 
 func NewModel() *Model {
@@ -81,10 +83,8 @@ func (model *Model) StartHashing() {
 		file.Close()
 	}()
 
-	//bufferSize := int64(32 * 1024)
-	fileSize := stat.Size()
-	processedBytes := int64(0)
-	bufferSize := fileSize / 100
+	model.totalSize = stat.Size()
+	model.currentSize = 0
 
 	// Read file
 	for {
@@ -97,10 +97,10 @@ func (model *Model) StartHashing() {
 		}
 
 		// Define buffer
-		buffer := make([]byte, bufferSize)
+		buffer := make([]byte, 32*1024)
 
 		// Read bytes
-		readBytes, err := file.Read(buffer)
+		n, err := file.Read(buffer)
 		if err == io.EOF {
 			err = nil
 			break
@@ -108,15 +108,14 @@ func (model *Model) StartHashing() {
 		if err != nil {
 			return
 		}
-		buffer = buffer[:readBytes]
+		buffer = buffer[:n]
 
 		// Write bytes to hasher
-		readBytes, err = model.hasher.Write(buffer)
+		n, err = model.hasher.Write(buffer)
 		if err != nil {
 			return
 		}
-		processedBytes += int64(readBytes)
 
-		model.progressFunc(float32(processedBytes) / float32(fileSize))
+		model.currentSize += int64(n)
 	}
 }

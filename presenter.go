@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"time"
 
 	"github.com/gotk3/gotk3/glib"
 )
@@ -24,9 +25,15 @@ func (presenter *Presenter) SetFile() {
 	hashType := presenter.model.DetectProvidedHashType()
 	isGood := presenter.model.IsGoodToGo()
 
-	presenter.view.MainHeaderBar.SetSubtitle(hashType)
-	presenter.view.VerifyButton.SetSensitive(isGood)
-	presenter.view.HashValueEntry.SetProgressFraction(0.0)
+	if presenter.view.MainHeaderBar.GetSubtitle() != hashType {
+		presenter.view.MainHeaderBar.SetSubtitle(hashType)
+	}
+	if presenter.view.VerifyButton.GetSensitive() != isGood {
+		presenter.view.VerifyButton.SetSensitive(isGood)
+	}
+	if presenter.view.HashValueEntry.GetProgressFraction() > 0 {
+		presenter.view.HashValueEntry.SetProgressFraction(0.0)
+	}
 }
 
 func (presenter *Presenter) SetHash() {
@@ -35,9 +42,15 @@ func (presenter *Presenter) SetHash() {
 	hashType := presenter.model.DetectProvidedHashType()
 	isGood := presenter.model.IsGoodToGo()
 
-	presenter.view.MainHeaderBar.SetSubtitle(hashType)
-	presenter.view.VerifyButton.SetSensitive(isGood)
-	presenter.view.HashValueEntry.SetProgressFraction(0.0)
+	if presenter.view.MainHeaderBar.GetSubtitle() != hashType {
+		presenter.view.MainHeaderBar.SetSubtitle(hashType)
+	}
+	if presenter.view.VerifyButton.GetSensitive() != isGood {
+		presenter.view.VerifyButton.SetSensitive(isGood)
+	}
+	if presenter.view.HashValueEntry.GetProgressFraction() > 0 {
+		presenter.view.HashValueEntry.SetProgressFraction(0.0)
+	}
 }
 
 func (presenter *Presenter) StopHashing() {
@@ -45,6 +58,12 @@ func (presenter *Presenter) StopHashing() {
 }
 
 func (presenter *Presenter) StartHashing() {
+	track := true
+
+	if !presenter.model.IsGoodToGo() {
+		return
+	}
+
 	presenter.model.CreateContext()
 
 	presenter.view.ButtonStack.SetVisibleChild(presenter.view.CancelButton)
@@ -70,11 +89,17 @@ func (presenter *Presenter) StartHashing() {
 			presenter.view.FileChooserButton.SetSensitive(true)
 			presenter.view.HashValueEntry.SetSensitive(true)
 		})
+
+		track = false
 	}
 
-	presenter.model.progressFunc = func(progressFraction float32) {
-		glib.IdleAdd(presenter.view.HashValueEntry.SetProgressFraction, progressFraction)
-	}
+	go func() {
+		for track {
+			time.Sleep(time.Millisecond * 10)
+			progress := float32(presenter.model.currentSize) / float32(presenter.model.totalSize)
+			glib.IdleAdd(presenter.view.HashValueEntry.SetProgressFraction, progress)
+		}
+	}()
 
 	go presenter.model.StartHashing()
 }
