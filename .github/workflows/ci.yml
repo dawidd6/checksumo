@@ -22,10 +22,14 @@ jobs:
           path: ~/.cache/go-build
           key: ${{runner.os}}-go-build-${{hashFiles('**/*.go')}}
           restore-keys: ${{runner.os}}-go-build
-      - name: Build binary
+      - name: Build project
         run: make
       - name: Test code
         run: make test
+      - name: Install software
+        run: sudo make install
+      - name: Run program
+        run: checksumo --help
   package:
     runs-on: ubuntu-latest
     steps:
