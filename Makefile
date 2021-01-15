@@ -57,7 +57,7 @@ install-data:
 install-po:
 	$(foreach LANG,$(LANGUAGES),install -D -m644 po/$(LANG).mo $(DESTDIR)$(PREFIX)/share/locale/$(LANG)/LC_MESSAGES/$(APP_ID).mo)
 
-install: build build-po install-bin install-data install-po build-schemas
+install: build-po install-bin install-data install-po build-schemas
 
 uninstall-bin:
 	rm -f $(DESTDIR)$(PREFIX)/bin/$(APP)
