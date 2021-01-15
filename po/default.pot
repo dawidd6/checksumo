@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-01-15 23:44+0100\n"
+"POT-Creation-Date: 2021-01-15 23:47+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,34 +17,34 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: data/checksumo.ui:24
+#: ui/main.ui:24
 msgid "Verify"
 msgstr ""
 
-#: data/checksumo.ui:35
+#: ui/main.ui:35
 msgid "page0"
 msgstr ""
 
-#: data/checksumo.ui:40
+#: ui/main.ui:40
 msgid "Cancel"
 msgstr ""
 
-#: data/checksumo.ui:50
+#: ui/main.ui:50
 msgid "page1"
 msgstr ""
 
-#: data/checksumo.ui:106
+#: ui/main.ui:106
 msgid "Hash value"
 msgstr ""
 
-#: data/checksumo.ui:127
+#: ui/main.ui:127
 msgid "Error"
 msgstr ""
 
-#: data/checksumo.ui:162
+#: ui/main.ui:162
 msgid "Hash mismatch"
 msgstr ""
 
-#: data/checksumo.ui:204
+#: ui/main.ui:204
 msgid "Hash match"
 msgstr ""

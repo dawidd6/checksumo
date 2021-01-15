@@ -7,10 +7,10 @@ GO_SET_VARS = \
 	-X main.appID=$(APP_ID) \
 	-X main.localeDomain=$(APP_ID) \
 	-X main.localeDir=$(DESTDIR)$(PREFIX)/share/locale \
-	-X main.uiResource=/data/$(APP).ui
+	-X main.uiResource=/ui/main.ui
 GO_FLAGS = -v -mod=vendor -tags=$(GOTK_TAG) -ldflags="-s -w $(GO_SET_VARS)"
 POTFILES = \
-	data/checksumo.ui
+	ui/main.ui
 LANGUAGES = \
 	pl
 
