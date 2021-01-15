@@ -31,11 +31,11 @@ type View struct {
 	ResultFailDialog *gtk.MessageDialog `gtk:"result_fail_dialog"`
 }
 
-func New(appName, appID, localeDir, uiResource string) *View {
+func New(appName, appID, localeDomain, localeDir, uiResource string) *View {
 	view := new(View)
 
 	// Initialize localization
-	glib.InitI18n(appName, localeDir)
+	glib.InitI18n(localeDomain, localeDir)
 
 	view.Application, _ = gtk.ApplicationNew(appID, glib.APPLICATION_FLAGS_NONE)
 	view.Application.Connect("activate", func() {
