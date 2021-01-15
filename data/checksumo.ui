@@ -14,35 +14,6 @@
           <object class="GtkBox">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
-            <child>
-              <object class="GtkButton" id="settings_button">
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="receives_default">True</property>
-                <child>
-                  <object class="GtkImage">
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <property name="icon_name">settings-app-symbolic</property>
-                    <property name="icon_size">1</property>
-                  </object>
-                </child>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
-                <property name="position">0</property>
-              </packing>
-            </child>
-          </object>
-          <packing>
-            <property name="position">1</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkBox">
-            <property name="visible">True</property>
-            <property name="can_focus">False</property>
             <property name="spacing">6</property>
             <child>
               <object class="GtkStack" id="button_stack">
@@ -90,6 +61,7 @@
           </object>
           <packing>
             <property name="pack_type">end</property>
+            <property name="position">1</property>
           </packing>
         </child>
       </object>
@@ -171,51 +143,6 @@
           </packing>
         </child>
       </object>
-    </child>
-  </object>
-  <object class="GtkWindow" id="settings_window">
-    <property name="can_focus">False</property>
-    <property name="window_position">center-on-parent</property>
-    <property name="destroy_with_parent">True</property>
-    <property name="gravity">center</property>
-    <property name="transient_for">main_window</property>
-    <property name="attached_to">main_window</property>
-    <child type="titlebar">
-      <object class="GtkHeaderBar" id="settings_header_bar">
-        <property name="visible">True</property>
-        <property name="can_focus">False</property>
-        <property name="title" translatable="yes">Preferences</property>
-        <property name="show_close_button">True</property>
-        <property name="decoration_layout">close</property>
-        <child>
-          <object class="GtkBox">
-            <property name="visible">True</property>
-            <property name="can_focus">False</property>
-            <child>
-              <object class="GtkButton" id="save_button">
-                <property name="label" translatable="yes">Save</property>
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="receives_default">True</property>
-                <style>
-                  <class name="suggested-action"/>
-                </style>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
-                <property name="position">0</property>
-              </packing>
-            </child>
-          </object>
-          <packing>
-            <property name="pack_type">end</property>
-          </packing>
-        </child>
-      </object>
-    </child>
-    <child>
-      <placeholder/>
     </child>
   </object>
   <object class="GtkImage" id="result_fail_image">

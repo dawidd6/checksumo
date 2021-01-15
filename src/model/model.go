@@ -115,7 +115,7 @@ func (model *Model) StartHashing() {
 		// Check if context were cancelled
 		select {
 		case <-model.ctx.Done():
-			err = model.ctx.Err()
+			err = nil
 			return
 		default:
 		}

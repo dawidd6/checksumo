@@ -6,7 +6,6 @@ package main
 import "C"
 
 import (
-	"log"
 	"os"
 
 	"github.com/dawidd6/checksumo/src/controller"
@@ -24,8 +23,6 @@ var (
 )
 
 func main() {
-	log.Println(appName, appID, localeDomain, localeDir, uiResource)
-
 	m := model.New()
 	v := view.New(appName, appID, localeDomain, localeDir, uiResource)
 	c := controller.New(v, m)

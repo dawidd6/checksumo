@@ -1,7 +1,6 @@
 package controller
 
 import (
-	"context"
 	"os"
 
 	"github.com/dawidd6/checksumo/src/model"
@@ -27,8 +26,6 @@ func New(v *view.View, m *model.Model) *Controller {
 		v.HashValueEntry.Connect("activate", controller.StartHashing)
 		v.VerifyButton.Connect("clicked", controller.StartHashing)
 		v.CancelButton.Connect("clicked", controller.StopHashing)
-		v.SettingsButton.Connect("clicked", v.SettingsWindow.Present)
-		v.SaveButton.Connect("clicked", v.SettingsWindow.Hide)
 	})
 
 	return controller
@@ -96,8 +93,7 @@ func (controller *Controller) StartHashing() {
 
 	controller.m.SetResultFunc(func(ok bool, err error) {
 		glib.IdleAdd(func() {
-			if err == context.Canceled {
-			} else if err != nil {
+			if err != nil {
 				controller.v.ErrorDialog.FormatSecondaryText(err.Error())
 				controller.v.ErrorDialog.Run()
 				controller.v.ErrorDialog.Hide()

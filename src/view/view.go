@@ -10,18 +10,14 @@ import (
 type View struct {
 	Application *gtk.Application
 
-	MainWindow     *gtk.ApplicationWindow `gtk:"main_window"`
-	SettingsWindow *gtk.Window            `gtk:"settings_window"`
+	MainWindow *gtk.ApplicationWindow `gtk:"main_window"`
 
-	MainHeaderBar     *gtk.HeaderBar `gtk:"main_header_bar"`
-	SettingsHeaderBar *gtk.HeaderBar `gtk:"settings_header_bar"`
+	MainHeaderBar *gtk.HeaderBar `gtk:"main_header_bar"`
 
 	ButtonStack *gtk.Stack `gtk:"button_stack"`
 
-	VerifyButton   *gtk.Button `gtk:"verify_button"`
-	CancelButton   *gtk.Button `gtk:"cancel_button"`
-	SaveButton     *gtk.Button `gtk:"save_button"`
-	SettingsButton *gtk.Button `gtk:"settings_button"`
+	VerifyButton *gtk.Button `gtk:"verify_button"`
+	CancelButton *gtk.Button `gtk:"cancel_button"`
 
 	FileChooserButton *gtk.FileChooserButton `gtk:"file_chooser_button"`
 	HashValueEntry    *gtk.Entry             `gtk:"hash_value_entry"`
@@ -63,9 +59,6 @@ func New(appName, appID, localeDomain, localeDir, uiResource string) *View {
 
 			field.Set(reflect.ValueOf(obj).Convert(field.Type()))
 		}
-
-		// Don't delete settings window after closing it, just hide
-		view.SettingsWindow.HideOnDelete()
 
 		// Show and add main window
 		view.MainWindow.Present()
