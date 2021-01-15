@@ -2,15 +2,15 @@ PREFIX = /usr
 APP = checksumo
 APP_ID = com.github.dawidd6.checksumo
 GOTK_TAG = gtk_3_22
-GO_FLAGS = -v -mod=vendor -tags=$(GOTK_TAG) -ldflags="-s -w -X main.AppName=$(APP) -X main.AppID=$(APP_ID) -X main.LocaleDir=$(DESTDIR)$(PREFIX)/share/locale"
+GO_FLAGS = -v -mod=vendor -tags=$(GOTK_TAG) -ldflags="-s -w -X main.appName=$(APP) -X main.appID=$(APP_ID) -X main.localeDir=$(DESTDIR)$(PREFIX)/share/locale -X main.uiResource=/data/$(APP).ui"
 POTFILES = \
 	data/checksumo.ui
 LANGUAGES = \
 	pl
 
 build:
-	glib-compile-resources --target=resources.h --generate-source data/$(APP).gresource.xml
-	go build $(GO_FLAGS) -o $(APP)
+	glib-compile-resources --target=src/resources.h --generate-source data/$(APP).gresource.xml
+	go build $(GO_FLAGS) -o $(APP) ./src
 
 test:
 	go test $(GO_FLAGS) ./...

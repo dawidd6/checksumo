@@ -1,4 +1,4 @@
-package main
+package model
 
 import (
 	"context"
@@ -14,6 +14,8 @@ import (
 type Model struct {
 	hasher hash.Hash
 
+	inProgress bool
+
 	providedHash string
 	actualHash   string
 	filePath     string
@@ -27,11 +29,27 @@ type Model struct {
 	resultFunc func(bool, error)
 }
 
-func NewModel() *Model {
+func New() *Model {
 	return &Model{}
 }
 
-func (model *Model) DetectProvidedHashType() string {
+func (model *Model) SetFile(f string) {
+	model.filePath = f
+}
+
+func (model *Model) SetHash(h string) {
+	model.providedHash = h
+}
+
+func (model *Model) SetResultFunc(f func(bool, error)) {
+	model.resultFunc = f
+}
+
+func (model *Model) GetProgress() float64 {
+	return float64(model.currentSize) / float64(model.totalSize)
+}
+
+func (model *Model) DetectType() string {
 	switch len(model.providedHash) {
 	case md5.Size * 2:
 		model.hasher = md5.New()
@@ -50,12 +68,17 @@ func (model *Model) DetectProvidedHashType() string {
 	return model.hashType
 }
 
-func (model *Model) IsGoodToGo() bool {
+func (model *Model) IsBusy() bool {
+	return model.inProgress
+}
+
+func (model *Model) IsReady() bool {
 	return model.hashType != "" && model.filePath != "" && model.providedHash != ""
 }
 
-func (model *Model) CreateContext() {
+func (model *Model) PrepareHashing() {
 	model.ctx, model.cancelFunc = context.WithCancel(context.Background())
+	model.inProgress = true
 }
 
 func (model *Model) StopHashing() {
@@ -76,6 +99,7 @@ func (model *Model) StartHashing() {
 
 	// On exit
 	defer func() {
+		model.inProgress = false
 		model.actualHash = hex.EncodeToString(model.hasher.Sum(nil))
 		model.hasher.Reset()
 		model.resultFunc(model.actualHash == model.providedHash, err)

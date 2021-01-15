@@ -1,21 +1,10 @@
-package main
-
-// #cgo pkg-config: gio-2.0
-// #include "resources.h"
-import "C"
+package view
 
 import (
-	"os"
 	"reflect"
 
 	"github.com/gotk3/gotk3/glib"
 	"github.com/gotk3/gotk3/gtk"
-)
-
-var (
-	AppName   string
-	AppID     string
-	LocaleDir string
 )
 
 type View struct {
@@ -42,17 +31,16 @@ type View struct {
 	ResultFailDialog *gtk.MessageDialog `gtk:"result_fail_dialog"`
 }
 
-func NewView() *View {
+func New(appName, appID, localeDir, uiResource string) *View {
 	view := new(View)
-	presenter := NewPresenter(view)
 
 	// Initialize localization
-	glib.InitI18n(AppName, LocaleDir)
+	glib.InitI18n(appName, localeDir)
 
-	view.Application, _ = gtk.ApplicationNew(AppID, glib.APPLICATION_FLAGS_NONE)
+	view.Application, _ = gtk.ApplicationNew(appID, glib.APPLICATION_FLAGS_NONE)
 	view.Application.Connect("activate", func() {
 		// Load UI from resources
-		builder, err := gtk.BuilderNewFromResource("/data/checksumo.ui")
+		builder, err := gtk.BuilderNewFromResource(uiResource)
 		if err != nil {
 			panic(err)
 		}
@@ -76,14 +64,8 @@ func NewView() *View {
 			field.Set(reflect.ValueOf(obj).Convert(field.Type()))
 		}
 
-		// Connect handlers to signals when widgets are ready
-		view.FileChooserButton.Connect("file-set", presenter.SetFile)
-		view.HashValueEntry.Connect("changed", presenter.SetHash)
-		view.HashValueEntry.Connect("activate", presenter.StartHashing)
-		view.VerifyButton.Connect("clicked", presenter.StartHashing)
-		view.CancelButton.Connect("clicked", presenter.StopHashing)
-		view.SettingsButton.Connect("clicked", view.SettingsWindow.Present)
-		view.SaveButton.Connect("clicked", view.SettingsWindow.Hide)
+		// Don't delete settings window after closing it, just hide
+		view.SettingsWindow.HideOnDelete()
 
 		// Show and add main window
 		view.MainWindow.Present()
@@ -91,8 +73,4 @@ func NewView() *View {
 	})
 
 	return view
-}
-
-func (view *View) Show() int {
-	return view.Application.Run(os.Args)
 }

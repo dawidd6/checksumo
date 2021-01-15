@@ -1,13 +1,15 @@
-package main
+package model_test
 
 import (
 	"testing"
 
+	"github.com/dawidd6/checksumo/src/model"
+
 	"github.com/stretchr/testify/assert"
 )
 
-func TestModel_DetectProvidedHashType(t *testing.T) {
-	model := NewModel()
+func TestDetectType(t *testing.T) {
+	m := model.New()
 
 	cases := map[string]string{
 		"f3a306f40e4a313fb5a584d73b3dee8f":                                 "MD5",
@@ -16,8 +18,8 @@ func TestModel_DetectProvidedHashType(t *testing.T) {
 	}
 
 	for hashVal, expectedHashType := range cases {
-		model.providedHash = hashVal
-		gotHashType := model.DetectProvidedHashType()
+		m.SetHash(hashVal)
+		gotHashType := m.DetectType()
 		assert.Equal(t, expectedHashType, gotHashType)
 	}
 }
