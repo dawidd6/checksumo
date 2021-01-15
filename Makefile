@@ -20,8 +20,12 @@ build: build-resources
 build-resources:
 	glib-compile-resources --target=src/resources.h --generate-source data/$(APP).gresource.xml
 
+ifdef DESTDIR
+build-schemas:
+else
 build-schemas:
 	glib-compile-schemas $(DESTDIR)$(PREFIX)/share/glib-2.0/schemas
+endif
 
 build-po:
 	$(foreach LANG,$(LANGUAGES),msgfmt --output-file po/$(LANG).mo po/$(LANG).po)
