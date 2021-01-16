@@ -6,7 +6,7 @@ GO_SET_VARS = \
 	-X main.appName=$(APP) \
 	-X main.appID=$(APP_ID) \
 	-X main.localeDomain=$(APP_ID) \
-	-X main.localeDir=$(DESTDIR)$(PREFIX)/share/locale \
+	-X main.localeDir=$(PREFIX)/share/locale \
 	-X main.uiResource=/ui/main.ui
 GO_FLAGS = -v -mod=vendor -tags=$(GOTK_TAG) -ldflags="-s -w $(GO_SET_VARS)"
 POTFILES = \
