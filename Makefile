@@ -22,9 +22,14 @@ build-resources:
 
 ifdef DESTDIR
 build-schemas:
+
+update-icons:
 else
 build-schemas:
 	glib-compile-schemas $(DESTDIR)$(PREFIX)/share/glib-2.0/schemas
+
+update-icons:
+	gtk-update-icon-cache -qtf $(DESTDIR)$(PREFIX)/share/icons/hicolor
 endif
 
 build-po:
@@ -50,21 +55,21 @@ install-bin:
 
 install-data:
 	install -D -m644 data/$(APP).desktop $(DESTDIR)$(PREFIX)/share/applications/$(APP_ID).desktop
-	install -D -m644 data/$(APP).svg $(DESTDIR)$(PREFIX)/share/icons/$(APP_ID).svg
+	install -D -m644 data/$(APP).svg $(DESTDIR)$(PREFIX)/share/icons/hicolor/scalable/apps/$(APP_ID).svg
 	install -D -m644 data/$(APP).gschema.xml $(DESTDIR)$(PREFIX)/share/glib-2.0/schemas/$(APP_ID).gschema.xml
 	install -D -m644 data/$(APP).appdata.xml $(DESTDIR)$(PREFIX)/share/metainfo/$(APP_ID).appdata.xml
 
 install-po:
 	$(foreach LANG,$(LANGUAGES),install -D -m644 po/$(LANG).mo $(DESTDIR)$(PREFIX)/share/locale/$(LANG)/LC_MESSAGES/$(APP_ID).mo)
 
-install: build-po install-bin install-data install-po build-schemas
+install: build-po install-bin install-data install-po build-schemas update-icons
 
 uninstall-bin:
 	rm -f $(DESTDIR)$(PREFIX)/bin/$(APP)
 
 uninstall-data:
 	rm -f $(DESTDIR)$(PREFIX)/share/applications/$(APP_ID).desktop
-	rm -f $(DESTDIR)$(PREFIX)/share/icons/$(APP_ID).svg
+	rm -f $(DESTDIR)$(PREFIX)/share/icons/hicolor/scalable/apps/$(APP_ID).svg
 	rm -f $(DESTDIR)$(PREFIX)/share/glib-2.0/schemas/$(APP_ID).gschema.xml
 	rm -f $(DESTDIR)$(PREFIX)/share/metainfo/$(APP_ID).appdata.xml
 
