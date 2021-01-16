@@ -7,7 +7,7 @@ on:
   pull_request:
 
 jobs:
-  code:
+  ci:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repo
@@ -30,20 +30,7 @@ jobs:
         run: sudo make install
       - name: Run program
         run: checksumo --help
-  package:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repo
-        uses: actions/checkout@v2
-      - name: Cache build
-        uses: actions/cache@v2
-        with:
-          path: debian/go-build
-          key: ${{runner.os}}-go-build-${{hashFiles('**/*.go')}}
-          restore-keys: ${{runner.os}}-go-build
-      - name: Build package
-        uses: dawidd6/action-debian-package@v1
-      - name: Upload package
+      - name: Upload binary
         uses: actions/upload-artifact@v2
         with:
-          path: '*.deb'
+          path: checksumo
