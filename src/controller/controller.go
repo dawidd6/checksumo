@@ -86,13 +86,15 @@ func (controller *Controller) StartHashing() {
 	controller.v.FileChooserButton.SetSensitive(false)
 	controller.v.HashValueEntry.SetSensitive(false)
 
-	glib.TimeoutAdd(10, func() bool {
+	progressSource, _ := glib.TimeoutAdd(10, func() bool {
 		controller.v.HashValueEntry.SetProgressFraction(controller.m.GetProgress())
-		return controller.m.IsBusy()
+		return true
 	})
 
 	controller.m.SetResultFunc(func(ok bool, err error) {
 		glib.IdleAdd(func() {
+			controller.v.HashValueEntry.SetProgressFraction(controller.m.GetProgress())
+
 			if err != nil {
 				controller.v.ErrorDialog.FormatSecondaryText(err.Error())
 				controller.v.ErrorDialog.Run()
@@ -109,6 +111,7 @@ func (controller *Controller) StartHashing() {
 			controller.v.FileChooserButton.SetSensitive(true)
 			controller.v.HashValueEntry.SetSensitive(true)
 		})
+		glib.SourceRemove(progressSource)
 	})
 
 	go controller.m.StartHashing()
