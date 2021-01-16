@@ -14,8 +14,6 @@ import (
 type Model struct {
 	hasher hash.Hash
 
-	inProgress bool
-
 	providedHash string
 	actualHash   string
 	filePath     string
@@ -68,17 +66,12 @@ func (model *Model) DetectType() string {
 	return model.hashType
 }
 
-func (model *Model) IsBusy() bool {
-	return model.inProgress
-}
-
 func (model *Model) IsReady() bool {
 	return model.hashType != "" && model.filePath != "" && model.providedHash != ""
 }
 
 func (model *Model) PrepareHashing() {
 	model.ctx, model.cancelFunc = context.WithCancel(context.Background())
-	model.inProgress = true
 }
 
 func (model *Model) StopHashing() {
@@ -99,7 +92,6 @@ func (model *Model) StartHashing() {
 
 	// On exit
 	defer func() {
-		model.inProgress = false
 		model.actualHash = hex.EncodeToString(model.hasher.Sum(nil))
 		model.hasher.Reset()
 		model.resultFunc(model.actualHash == model.providedHash, err)
