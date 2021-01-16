@@ -21,28 +21,12 @@ Supports cancellation of verification if desired.
 
 ![](data/screenshots/check4.png)
 
-## Installation
+## Requirements
 
-This application targets Ubuntu 18.04 and later, though the only requirement is to have GTK+ 3.22 or later installed.
+- **GTK** `>=3.22`
+- **Go** `>=1.11`
 
-### Repository
-
-An `apt` repository is provided. It is made out of GitHub Releases and packages are served via HTTPS protocol, but they are
-not signed.
-
-```shell script
-echo "deb [trusted=yes] https://github.com/dawidd6/checksumo/releases/download/repo ./" | sudo tee -a /etc/apt/sources.list
-sudo apt update
-sudo apt install checksumo
-```
-
-### Binary
-
-Head over to Releases section of this repository, grab the `.deb` file and install it via `dpkg`.
-
-### Source
-
-Needs `libgtk-3-dev` package on Debian-based distributions.
+## Building
 
 ```shell script
 make
