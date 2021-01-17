@@ -17,40 +17,7 @@
    inkscape:version="0.92.5 (2060ec1f9f, 2020-04-08)"
    sodipodi:docname="checksumo.svg">
   <defs
-     id="defs2">
-    <filter
-       style="color-interpolation-filters:sRGB;"
-       inkscape:label="Drop Shadow"
-       id="filter1209">
-      <feFlood
-         flood-opacity="0.498039"
-         flood-color="rgb(0,0,0)"
-         result="flood"
-         id="feFlood1199" />
-      <feComposite
-         in="flood"
-         in2="SourceGraphic"
-         operator="in"
-         result="composite1"
-         id="feComposite1201" />
-      <feGaussianBlur
-         in="composite1"
-         stdDeviation="10"
-         result="blur"
-         id="feGaussianBlur1203" />
-      <feOffset
-         dx="0"
-         dy="0"
-         result="offset"
-         id="feOffset1205" />
-      <feComposite
-         in="SourceGraphic"
-         in2="offset"
-         operator="over"
-         result="composite2"
-         id="feComposite1207" />
-    </filter>
-  </defs>
+     id="defs2" />
   <sodipodi:namedview
      id="base"
      pagecolor="#ffffff"
@@ -81,7 +48,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title />
+        <dc:title></dc:title>
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -92,7 +59,7 @@
      transform="translate(-15.916664,-59.416664)"
      style="display:inline">
     <circle
-       style="fill:#1a1a1a;stroke-width:0.26458332;filter:url(#filter1209)"
+       style="fill:#1a1a1a;stroke-width:0.26458332"
        id="path12"
        cx="105"
        cy="148.5"
