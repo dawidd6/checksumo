@@ -10,12 +10,14 @@ import (
 
 	"github.com/dawidd6/checksumo/src/controller"
 	"github.com/dawidd6/checksumo/src/model"
+
 	"github.com/dawidd6/checksumo/src/view"
+	"github.com/gotk3/gotk3/glib"
+	"github.com/gotk3/gotk3/gtk"
 )
 
 // Those are set via -ldflags in Makefile
 var (
-	appName      string
 	appID        string
 	localeDomain string
 	localeDir    string
@@ -23,9 +25,19 @@ var (
 )
 
 func main() {
+	// Initialize localization
+	glib.InitI18n(localeDomain, localeDir)
+
+	// Create components
 	m := model.New()
-	v := view.New(appName, appID, localeDomain, localeDir, uiResource)
+	v := view.New()
 	c := controller.New(v, m)
 
-	os.Exit(c.Run())
+	// Create app
+	app, _ := gtk.ApplicationNew(appID, glib.APPLICATION_FLAGS_NONE)
+	app.Connect("activate", v.Activate, uiResource)
+	app.ConnectAfter("activate", c.Activate)
+
+	// Run app
+	os.Exit(app.Run(os.Args))
 }

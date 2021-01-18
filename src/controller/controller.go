@@ -1,11 +1,10 @@
 package controller
 
 import (
-	"os"
+	"context"
 
 	"github.com/dawidd6/checksumo/src/model"
 	"github.com/dawidd6/checksumo/src/view"
-
 	"github.com/gotk3/gotk3/glib"
 )
 
@@ -15,24 +14,18 @@ type Controller struct {
 }
 
 func New(v *view.View, m *model.Model) *Controller {
-	controller := &Controller{
+	return &Controller{
 		v: v,
 		m: m,
 	}
-
-	v.Application.ConnectAfter("activate", func() {
-		v.FileChooserButton.Connect("file-set", controller.SetFile)
-		v.HashValueEntry.Connect("changed", controller.SetHash)
-		v.HashValueEntry.Connect("activate", controller.StartHashing)
-		v.VerifyButton.Connect("clicked", controller.StartHashing)
-		v.CancelButton.Connect("clicked", controller.StopHashing)
-	})
-
-	return controller
 }
 
-func (controller *Controller) Run() int {
-	return controller.v.Application.Run(os.Args)
+func (controller *Controller) Activate() {
+	controller.v.FileChooserButton.Connect("file-set", controller.SetFile)
+	controller.v.HashValueEntry.Connect("changed", controller.SetHash)
+	controller.v.HashValueEntry.Connect("activate", controller.StartHashing)
+	controller.v.VerifyButton.Connect("clicked", controller.StartHashing)
+	controller.v.CancelButton.Connect("clicked", controller.StopHashing)
 }
 
 func (controller *Controller) SetFile() {
@@ -46,7 +39,7 @@ func (controller *Controller) SetFile() {
 		controller.v.MainHeaderBar.SetSubtitle(hashType)
 	}
 	if controller.v.VerifyButton.GetSensitive() != isReady {
-		controller.v.VerifyButton.SetSensitive(!isReady)
+		controller.v.VerifyButton.SetSensitive(isReady)
 	}
 	if controller.v.HashValueEntry.GetProgressFraction() > 0 {
 		controller.v.HashValueEntry.SetProgressFraction(0.0)
@@ -95,7 +88,9 @@ func (controller *Controller) StartHashing() {
 		glib.IdleAdd(func() {
 			controller.v.HashValueEntry.SetProgressFraction(controller.m.GetProgress())
 
-			if err != nil {
+			if err == context.Canceled {
+				// NOOP
+			} else if err != nil {
 				controller.v.ErrorDialog.FormatSecondaryText(err.Error())
 				controller.v.ErrorDialog.Run()
 				controller.v.ErrorDialog.Hide()

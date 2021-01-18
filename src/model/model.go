@@ -107,7 +107,7 @@ func (model *Model) StartHashing() {
 		// Check if context were cancelled
 		select {
 		case <-model.ctx.Done():
-			err = nil
+			err = model.ctx.Err()
 			return
 		default:
 		}

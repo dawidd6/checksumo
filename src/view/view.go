@@ -3,13 +3,10 @@ package view
 import (
 	"reflect"
 
-	"github.com/gotk3/gotk3/glib"
 	"github.com/gotk3/gotk3/gtk"
 )
 
 type View struct {
-	Application *gtk.Application
-
 	MainWindow *gtk.ApplicationWindow `gtk:"main_window"`
 
 	MainHeaderBar *gtk.HeaderBar `gtk:"main_header_bar"`
@@ -27,43 +24,39 @@ type View struct {
 	ResultFailDialog *gtk.MessageDialog `gtk:"result_fail_dialog"`
 }
 
-func New(appName, appID, localeDomain, localeDir, uiResource string) *View {
-	view := new(View)
+func New() *View {
+	return &View{}
+}
 
-	// Initialize localization
-	glib.InitI18n(localeDomain, localeDir)
+func (view *View) Activate(app *gtk.Application, uiResource string) {
+	// Load UI from resources
+	builder, err := gtk.BuilderNewFromResource(uiResource)
+	if err != nil {
+		panic(err)
+	}
 
-	view.Application, _ = gtk.ApplicationNew(appID, glib.APPLICATION_FLAGS_NONE)
-	view.Application.Connect("activate", func() {
-		// Load UI from resources
-		builder, err := gtk.BuilderNewFromResource(uiResource)
+	// Get widgets from UI definition
+	vStruct := reflect.ValueOf(view).Elem()
+	for i := 0; i < vStruct.NumField(); i++ {
+		field := vStruct.Field(i)
+		structField := vStruct.Type().Field(i)
+		widget := structField.Tag.Get("gtk")
+
+		if widget == "" {
+			continue
+		}
+
+		obj, err := builder.GetObject(widget)
 		if err != nil {
 			panic(err)
 		}
 
-		// Get widgets from UI definition
-		vStruct := reflect.ValueOf(view).Elem()
-		for i := 0; i < vStruct.NumField(); i++ {
-			field := vStruct.Field(i)
-			structField := vStruct.Type().Field(i)
-			widget := structField.Tag.Get("gtk")
+		field.Set(reflect.ValueOf(obj).Convert(field.Type()))
+	}
 
-			if widget == "" {
-				continue
-			}
+	// Show main window
+	view.MainWindow.Present()
 
-			obj, err := builder.GetObject(widget)
-			if err != nil {
-				panic(err)
-			}
-
-			field.Set(reflect.ValueOf(obj).Convert(field.Type()))
-		}
-
-		// Show and add main window
-		view.MainWindow.Present()
-		view.Application.AddWindow(view.MainWindow)
-	})
-
-	return view
+	// Add main window
+	app.AddWindow(view.MainWindow)
 }
