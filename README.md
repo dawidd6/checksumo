@@ -23,14 +23,22 @@ Supports cancellation of verification if desired.
 
 ![](data/screenshots/check4.png)
 
-## Requirements
+## Installation
+
+### Flatpak
+
+Click the Flathub badge above for more informations.
+
+### Source
+
+To build and run this software, one needs to have:
 
 - **GTK** `>=3.22`
 - **Go** `>=1.11`
 
-## Building
+then execute below commands:
 
 ```shell script
-make
-sudo make install
+$ make
+$ sudo make install
 ```
