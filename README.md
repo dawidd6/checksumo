@@ -1,6 +1,8 @@
+<img src="./data/checksumo.svg" width="128" alt="logo">
+
 # checksumo 
 
-<img src="./data/checksumo.svg" width="128" alt="logo">
+<a href='https://flathub.org/apps/details/com.github.dawidd6.checksumo'><img width='240' alt='Download on Flathub' src='https://flathub.org/assets/badges/flathub-badge-en.png'/></a>
 
 A simple application for verifying specified file against given hash, written in Go with GTK+3 graphical interface.
 
