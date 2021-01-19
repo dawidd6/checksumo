@@ -1,4 +1,4 @@
-PREFIX = /usr
+PREFIX = /usr/local
 APP = checksumo
 APP_ID = com.github.dawidd6.checksumo
 GOTK_TAG = gtk_3_22
@@ -22,14 +22,9 @@ build-resources:
 
 ifdef DESTDIR
 build-schemas:
-
-update-icons:
 else
 build-schemas:
 	glib-compile-schemas $(DESTDIR)$(PREFIX)/share/glib-2.0/schemas
-
-update-icons:
-	gtk-update-icon-cache -qtf $(DESTDIR)$(PREFIX)/share/icons/hicolor
 endif
 
 build-po:
@@ -62,7 +57,7 @@ install-data:
 install-po:
 	$(foreach LANG,$(LANGUAGES),install -D -m644 po/$(LANG).mo $(DESTDIR)$(PREFIX)/share/locale/$(LANG)/LC_MESSAGES/$(APP_ID).mo)
 
-install: build-po install-bin install-data install-po build-schemas update-icons
+install: build-po install-bin install-data install-po build-schemas
 
 uninstall-bin:
 	rm -f $(DESTDIR)$(PREFIX)/bin/$(APP)
