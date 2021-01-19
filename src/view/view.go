@@ -3,6 +3,8 @@ package view
 import (
 	"reflect"
 
+	"github.com/gotk3/gotk3/glib"
+
 	"github.com/gotk3/gotk3/gtk"
 )
 
@@ -59,4 +61,11 @@ func (view *View) Activate(app *gtk.Application, uiResource string) {
 
 	// Add main window
 	app.AddWindow(view.MainWindow)
+}
+
+func (view *View) notify(title, body string) {
+	notification := glib.NotificationNew(title)
+	notification.SetBody(body)
+	app, _ := view.MainWindow.GetApplication()
+	app.SendNotification(app.GetApplicationID(), notification)
 }
