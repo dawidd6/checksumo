@@ -8,4 +8,3 @@ Icon=com.github.dawidd6.checksumo
 Exec=checksumo
 Terminal=false
 StartupNotify=true
-StartupWMClass=checksumo
