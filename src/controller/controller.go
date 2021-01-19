@@ -91,15 +91,11 @@ func (controller *Controller) StartHashing() {
 			if err == context.Canceled {
 				// NOOP
 			} else if err != nil {
-				controller.v.ErrorDialog.FormatSecondaryText(err.Error())
-				controller.v.ErrorDialog.Run()
-				controller.v.ErrorDialog.Hide()
+				controller.v.OnError(err)
 			} else if ok {
-				controller.v.ResultOkDialog.Run()
-				controller.v.ResultOkDialog.Hide()
+				controller.v.OnSuccess()
 			} else {
-				controller.v.ResultFailDialog.Run()
-				controller.v.ResultFailDialog.Hide()
+				controller.v.OnFailure()
 			}
 
 			controller.v.ButtonStack.SetVisibleChild(controller.v.VerifyButton)
