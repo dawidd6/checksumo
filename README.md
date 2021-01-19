@@ -1,4 +1,4 @@
-<img align="left" width="128" height="128" src="data/checksumo.svg">
+<img align="left" width="96" height="96" src="data/checksumo.svg">
 <h1>Checksumo</h1>
 
 <a href='https://flathub.org/apps/details/com.github.dawidd6.checksumo'><img width='240' alt='Download on Flathub' src='https://flathub.org/assets/badges/flathub-badge-en.png'/></a>
@@ -26,7 +26,7 @@ Supports cancellation of verification if desired.
 
 ### Flatpak
 
-Click the Flathub badge above for more informations.
+Click the Flathub badge above for more information.
 
 ### Source
 
