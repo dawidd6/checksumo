@@ -7,6 +7,7 @@ import "C"
 
 import (
 	"os"
+	"unsafe"
 
 	"github.com/dawidd6/checksumo/src/controller"
 	"github.com/dawidd6/checksumo/src/model"
@@ -32,6 +33,14 @@ func main() {
 	m := model.New()
 	v := view.New()
 	c := controller.New(v, m)
+
+	// Set program name to app ID,
+	// so DEs could recognize the app and desktop file
+	//
+	// This should be upstreamed to gotk3
+	appIDc := (*C.gchar)(C.CString(appID))
+	C.g_set_prgname(appIDc)
+	C.free(unsafe.Pointer(appIDc))
 
 	// Create app
 	app, _ := gtk.ApplicationNew(appID, glib.APPLICATION_FLAGS_NONE)
