@@ -18,7 +18,6 @@ import (
 
 // Those are set via -ldflags in Makefile
 var (
-	appName      string
 	appID        string
 	localeDomain string
 	localeDir    string
@@ -28,11 +27,6 @@ var (
 func main() {
 	// Initialize i18n
 	glib.InitI18n(localeDomain, localeDir)
-
-	// Set app name
-	// This sets the WM_CLASS property for Xorg
-	// It should match the app binary name
-	glib.SetApplicationName(appName)
 
 	// Create components
 	m := model.New()
