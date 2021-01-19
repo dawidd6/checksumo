@@ -28,10 +28,7 @@ func (controller *Controller) Activate() {
 	controller.v.CancelButton.Connect("clicked", controller.StopHashing)
 }
 
-func (controller *Controller) SetFile() {
-	filePath := controller.v.FileChooserButton.GetFilename()
-	controller.m.SetFile(filePath)
-
+func (controller *Controller) setFileOrHash() {
 	hashType := controller.m.DetectType()
 	isReady := controller.m.IsReady()
 
@@ -46,22 +43,16 @@ func (controller *Controller) SetFile() {
 	}
 }
 
+func (controller *Controller) SetFile() {
+	filePath := controller.v.FileChooserButton.GetFilename()
+	controller.m.SetFile(filePath)
+	controller.setFileOrHash()
+}
+
 func (controller *Controller) SetHash() {
 	hashValue, _ := controller.v.HashValueEntry.GetText()
 	controller.m.SetHash(hashValue)
-
-	hashType := controller.m.DetectType()
-	isReady := controller.m.IsReady()
-
-	if controller.v.MainHeaderBar.GetSubtitle() != hashType {
-		controller.v.MainHeaderBar.SetSubtitle(hashType)
-	}
-	if controller.v.VerifyButton.GetSensitive() != isReady {
-		controller.v.VerifyButton.SetSensitive(isReady)
-	}
-	if controller.v.HashValueEntry.GetProgressFraction() > 0 {
-		controller.v.HashValueEntry.SetProgressFraction(0.0)
-	}
+	controller.setFileOrHash()
 }
 
 func (controller *Controller) StopHashing() {
