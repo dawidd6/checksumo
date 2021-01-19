@@ -1,4 +1,4 @@
-PREFIX = /usr
+PREFIX = /usr/local
 APP = checksumo
 APP_ID = com.github.dawidd6.checksumo
 GOTK_TAG = gtk_3_22
