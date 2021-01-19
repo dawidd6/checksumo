@@ -35,9 +35,6 @@
         <screenshot>
             <image>https://raw.githubusercontent.com/dawidd6/checksumo/master/data/screenshots/check3.png</image>
         </screenshot>
-        <screenshot>
-            <image>https://raw.githubusercontent.com/dawidd6/checksumo/master/data/screenshots/check4.png</image>
-        </screenshot>
     </screenshots>
     <content_rating type="oars-1.1" />
     <translation type="gettext">com.github.dawidd6.checksumo</translation>
