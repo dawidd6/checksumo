@@ -18,6 +18,7 @@ import (
 
 // Those are set via -ldflags in Makefile
 var (
+	appName      string
 	appID        string
 	localeDomain string
 	localeDir    string
@@ -25,8 +26,13 @@ var (
 )
 
 func main() {
-	// Initialize localization
+	// Initialize i18n
 	glib.InitI18n(localeDomain, localeDir)
+
+	// Set app name
+	// This sets the WM_CLASS property for Xorg
+	// It should match the app binary name
+	glib.SetApplicationName(appName)
 
 	// Create components
 	m := model.New()
@@ -36,7 +42,7 @@ func main() {
 	// Create app
 	app, _ := gtk.ApplicationNew(appID, glib.APPLICATION_FLAGS_NONE)
 	app.Connect("activate", v.Activate, uiResource)
-	app.ConnectAfter("activate", c.Activate)
+	app.Connect("activate", c.Activate)
 
 	// Run app
 	os.Exit(app.Run(os.Args))
