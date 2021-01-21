@@ -2,13 +2,7 @@ PREFIX = /usr/local
 APP = checksumo
 APP_ID = com.github.dawidd6.checksumo
 GOTK_TAG = gtk_3_22
-GO_SET_VARS = \
-	-X main.appName=$(APP) \
-	-X main.appID=$(APP_ID) \
-	-X main.localeDomain=$(APP_ID) \
-	-X main.localeDir=$(DESTDIR)$(PREFIX)/share/locale \
-	-X main.uiResource=/data/$(APP).ui
-GO_FLAGS = -v -mod=vendor -tags=$(GOTK_TAG) -ldflags="-s -w $(GO_SET_VARS)"
+GO_FLAGS = -v -mod=vendor -tags=$(GOTK_TAG)
 POTFILES = \
 	data/checksumo.ui
 LANGUAGES = \
