@@ -3,8 +3,9 @@ package views
 import (
 	"path/filepath"
 
-	"github.com/dawidd6/checksumo/src/constants"
 	"github.com/dawidd6/checksumo/src/settings"
+
+	"github.com/dawidd6/checksumo/src/constants"
 	"github.com/dawidd6/checksumo/src/utils"
 
 	"github.com/dawidd6/checksumo/src/presenters"
@@ -69,10 +70,6 @@ func (view *view) Activate(app *gtk.Application) {
 }
 
 func (view *view) notify(title, body string) {
-	if !settings.ShowNotifications() {
-		return
-	}
-
 	notification := glib.NotificationNew(title)
 	notification.SetBody(body)
 	notification.SetDefaultAction("app.bring-up")
@@ -91,35 +88,38 @@ func (view *view) GetHash() string {
 }
 
 func (view *view) OnResultError(err error) {
-	if !view.MainWindow.IsActive() {
+	if view.MainWindow.IsActive() || !settings.ShowNotifications() {
+		view.ErrorDialog.FormatSecondaryText(err.Error())
+		view.ErrorDialog.Run()
+		view.ErrorDialog.Hide()
+	} else {
 		title, _ := view.ErrorDialog.GetProperty("text")
 		view.notify(title.(string), err.Error())
 	}
-	view.ErrorDialog.FormatSecondaryText(err.Error())
-	view.ErrorDialog.Run()
-	view.ErrorDialog.Hide()
 }
 
 func (view *view) OnResultSuccess() {
-	if !view.MainWindow.IsActive() {
+	if view.MainWindow.IsActive() || !settings.ShowNotifications() {
+		view.ResultOkDialog.Run()
+		view.ResultOkDialog.Hide()
+	} else {
 		text, _ := view.ResultOkDialog.GetProperty("text")
 		filePath := view.FileChooserButton.GetFilename()
 		fileName := filepath.Base(filePath)
 		view.notify(text.(string), fileName)
 	}
-	view.ResultOkDialog.Run()
-	view.ResultOkDialog.Hide()
 }
 
 func (view *view) OnResultFailure() {
-	if !view.MainWindow.IsActive() {
+	if view.MainWindow.IsActive() || !settings.ShowNotifications() {
+		view.ResultFailDialog.Run()
+		view.ResultFailDialog.Hide()
+	} else {
 		text, _ := view.ResultFailDialog.GetProperty("text")
 		filePath := view.FileChooserButton.GetFilename()
 		fileName := filepath.Base(filePath)
 		view.notify(text.(string), fileName)
 	}
-	view.ResultFailDialog.Run()
-	view.ResultFailDialog.Hide()
 }
 
 func (view *view) OnFileOrHashSet(isReady bool, hashType string) {
