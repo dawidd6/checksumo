@@ -222,7 +222,7 @@
     <property name="icon_name">emblem-default</property>
     <property name="icon_size">6</property>
   </object>
-  <object class="GtkMessageDialog" id="ResultOkImag">
+  <object class="GtkMessageDialog" id="ResultOkDialog">
     <property name="can_focus">False</property>
     <property name="window_position">center-on-parent</property>
     <property name="type_hint">dialog</property>
