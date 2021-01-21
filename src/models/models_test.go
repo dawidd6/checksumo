@@ -1,15 +1,15 @@
-package model_test
+package models_test
 
 import (
 	"testing"
 
-	"github.com/dawidd6/checksumo/src/model"
+	"github.com/dawidd6/checksumo/src/models"
 
 	"github.com/stretchr/testify/assert"
 )
 
 func TestDetectType(t *testing.T) {
-	m := model.New()
+	m := models.New()
 
 	cases := map[string]string{
 		"f3a306f40e4a313fb5a584d73b3dee8f":                                 "MD5",

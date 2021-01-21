@@ -1,4 +1,4 @@
-package model
+package models
 
 import (
 	"context"
@@ -15,16 +15,15 @@ type Model struct {
 	hasher hash.Hash
 
 	providedHash string
-	actualHash   string
+	computedHash string
 	filePath     string
 	hashType     string
 
-	totalSize   int64
-	currentSize int64
+	totalBytes int64
+	readBytes  int64
 
 	ctx        context.Context
 	cancelFunc context.CancelFunc
-	resultFunc func(bool, error)
 }
 
 func New() *Model {
@@ -39,12 +38,8 @@ func (model *Model) SetHash(h string) {
 	model.providedHash = h
 }
 
-func (model *Model) SetResultFunc(f func(bool, error)) {
-	model.resultFunc = f
-}
-
 func (model *Model) GetProgress() float64 {
-	return float64(model.currentSize) / float64(model.totalSize)
+	return float64(model.readBytes) / float64(model.totalBytes)
 }
 
 func (model *Model) DetectType() string {
@@ -78,37 +73,36 @@ func (model *Model) StopHashing() {
 	model.cancelFunc()
 }
 
-func (model *Model) StartHashing() {
+func (model *Model) StartHashing() (bool, error) {
+	// Cancel context on exit
+	defer model.cancelFunc()
+
 	// Open file
 	file, err := os.OpenFile(model.filePath, os.O_RDONLY, 0666)
 	if err != nil {
-		return
+		return false, err
 	}
+	defer file.Close()
 
+	// Get file info
 	stat, err := file.Stat()
 	if err != nil {
-		return
+		return false, err
 	}
 
-	// On exit
-	defer func() {
-		model.actualHash = hex.EncodeToString(model.hasher.Sum(nil))
-		model.hasher.Reset()
-		model.resultFunc(model.actualHash == model.providedHash, err)
-		model.cancelFunc()
-		file.Close()
-	}()
+	// Reset hasher buffer
+	model.hasher.Reset()
 
-	model.totalSize = stat.Size()
-	model.currentSize = 0
+	// Zero bytes
+	model.totalBytes = stat.Size()
+	model.readBytes = 0
 
 	// Read file
 	for {
 		// Check if context were cancelled
 		select {
 		case <-model.ctx.Done():
-			err = model.ctx.Err()
-			return
+			return false, model.ctx.Err()
 		default:
 		}
 
@@ -118,20 +112,26 @@ func (model *Model) StartHashing() {
 		// Read bytes
 		n, err := file.Read(buffer)
 		if err == io.EOF {
-			err = nil
 			break
 		}
 		if err != nil {
-			return
+			return false, err
 		}
 		buffer = buffer[:n]
 
 		// Write bytes to hasher
 		n, err = model.hasher.Write(buffer)
 		if err != nil {
-			return
+			return false, err
 		}
 
-		model.currentSize += int64(n)
+		// Append read bytes
+		model.readBytes += int64(n)
 	}
+
+	// Set computed hash
+	model.computedHash = hex.EncodeToString(model.hasher.Sum(nil))
+
+	// Return the result of hashes comparison
+	return model.computedHash == model.providedHash, nil
 }
