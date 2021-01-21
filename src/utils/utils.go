@@ -18,13 +18,8 @@ func BindWidgets(v interface{}, uiResourcePath string) {
 	for i := 0; i < vStruct.NumField(); i++ {
 		field := vStruct.Field(i)
 		structField := vStruct.Type().Field(i)
-		widget := structField.Tag.Get("gtk")
 
-		if widget == "" {
-			continue
-		}
-
-		obj, err := builder.GetObject(widget)
+		obj, err := builder.GetObject(structField.Name)
 		if err != nil {
 			panic(err)
 		}
