@@ -2,10 +2,10 @@
 <!-- Generated with glade 3.22.2 -->
 <interface>
   <requires lib="gtk+" version="3.20"/>
-  <object class="GtkApplicationWindow" id="main_window">
+  <object class="GtkApplicationWindow" id="MainWindow">
     <property name="can_focus">False</property>
     <child type="titlebar">
-      <object class="GtkHeaderBar" id="main_header_bar">
+      <object class="GtkHeaderBar" id="MainHeaderBar">
         <property name="visible">True</property>
         <property name="can_focus">False</property>
         <property name="title">Checksumo</property>
@@ -15,7 +15,7 @@
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <child>
-              <object class="GtkButton">
+              <object class="GtkButton" id="SettingsButton">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
@@ -45,11 +45,11 @@
             <property name="can_focus">False</property>
             <property name="spacing">6</property>
             <child>
-              <object class="GtkStack" id="button_stack">
+              <object class="GtkStack" id="ButtonStack">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <child>
-                  <object class="GtkButton" id="verify_button">
+                  <object class="GtkButton" id="VerifyButton">
                     <property name="label" translatable="yes">Verify</property>
                     <property name="visible">True</property>
                     <property name="sensitive">False</property>
@@ -65,7 +65,7 @@
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkButton" id="cancel_button">
+                  <object class="GtkButton" id="CancelButton">
                     <property name="label" translatable="yes">Cancel</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
@@ -107,7 +107,7 @@
         <property name="spacing">15</property>
         <property name="baseline_position">top</property>
         <child>
-          <object class="GtkFileChooserButton" id="file_chooser_button">
+          <object class="GtkFileChooserButton" id="FileChooserButton">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <property name="valign">center</property>
@@ -123,7 +123,7 @@
           </packing>
         </child>
         <child>
-          <object class="GtkEntry" id="hash_value_entry">
+          <object class="GtkEntry" id="HashValueEntry">
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="valign">center</property>
@@ -144,13 +144,13 @@
       </object>
     </child>
   </object>
-  <object class="GtkMessageDialog" id="error_dialog">
+  <object class="GtkMessageDialog" id="ErrorDialog">
     <property name="can_focus">False</property>
     <property name="modal">True</property>
     <property name="window_position">center-on-parent</property>
     <property name="type_hint">dialog</property>
     <property name="gravity">center</property>
-    <property name="transient_for">main_window</property>
+    <property name="transient_for">MainWindow</property>
     <property name="message_type">error</property>
     <property name="buttons">close</property>
     <property name="text" translatable="yes">Error</property>
@@ -174,22 +174,22 @@
       </object>
     </child>
   </object>
-  <object class="GtkImage" id="result_fail_image">
+  <object class="GtkImage" id="ResultFailImage">
     <property name="visible">True</property>
     <property name="can_focus">False</property>
     <property name="icon_name">emblem-unreadable</property>
     <property name="icon_size">6</property>
   </object>
-  <object class="GtkMessageDialog" id="result_fail_dialog">
+  <object class="GtkMessageDialog" id="ResultFailDialog">
     <property name="can_focus">False</property>
     <property name="window_position">center-on-parent</property>
     <property name="type_hint">dialog</property>
     <property name="gravity">center</property>
-    <property name="transient_for">main_window</property>
+    <property name="transient_for">MainWindow</property>
     <property name="message_type">other</property>
     <property name="buttons">close</property>
     <property name="text" translatable="yes">Hash mismatch</property>
-    <property name="image">result_fail_image</property>
+    <property name="image">ResultFailImage</property>
     <child internal-child="vbox">
       <object class="GtkBox">
         <property name="can_focus">False</property>
@@ -216,22 +216,22 @@
       </object>
     </child>
   </object>
-  <object class="GtkImage" id="result_ok_image">
+  <object class="GtkImage" id="ResultOkImage">
     <property name="visible">True</property>
     <property name="can_focus">False</property>
     <property name="icon_name">emblem-default</property>
     <property name="icon_size">6</property>
   </object>
-  <object class="GtkMessageDialog" id="result_ok_dialog">
+  <object class="GtkMessageDialog" id="ResultOkImag">
     <property name="can_focus">False</property>
     <property name="window_position">center-on-parent</property>
     <property name="type_hint">dialog</property>
     <property name="gravity">center</property>
-    <property name="transient_for">main_window</property>
+    <property name="transient_for">MainWindow</property>
     <property name="message_type">other</property>
     <property name="buttons">close</property>
     <property name="text" translatable="yes">Hash match</property>
-    <property name="image">result_ok_image</property>
+    <property name="image">ResultOkImage</property>
     <child internal-child="vbox">
       <object class="GtkBox">
         <property name="can_focus">False</property>
