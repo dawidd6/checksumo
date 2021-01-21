@@ -20,16 +20,16 @@ type View interface {
 }
 
 type view struct {
-	MainWindow        *gtk.ApplicationWindow `gtk:"main_window"`
-	MainHeaderBar     *gtk.HeaderBar         `gtk:"main_header_bar"`
-	ButtonStack       *gtk.Stack             `gtk:"button_stack"`
-	VerifyButton      *gtk.Button            `gtk:"verify_button"`
-	CancelButton      *gtk.Button            `gtk:"cancel_button"`
-	FileChooserButton *gtk.FileChooserButton `gtk:"file_chooser_button"`
-	HashValueEntry    *gtk.Entry             `gtk:"hash_value_entry"`
-	ErrorDialog       *gtk.MessageDialog     `gtk:"error_dialog"`
-	ResultOkDialog    *gtk.MessageDialog     `gtk:"result_ok_dialog"`
-	ResultFailDialog  *gtk.MessageDialog     `gtk:"result_fail_dialog"`
+	MainWindow        *gtk.ApplicationWindow
+	MainHeaderBar     *gtk.HeaderBar
+	ButtonStack       *gtk.Stack
+	VerifyButton      *gtk.Button
+	CancelButton      *gtk.Button
+	FileChooserButton *gtk.FileChooserButton
+	HashValueEntry    *gtk.Entry
+	ErrorDialog       *gtk.MessageDialog
+	ResultOkDialog    *gtk.MessageDialog
+	ResultFailDialog  *gtk.MessageDialog
 }
 
 func New() View {
