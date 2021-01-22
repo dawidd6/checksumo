@@ -32,7 +32,7 @@ Click the Flathub badge above for more information.
 
 To build and run this software, one needs to have:
 
-- **GTK** `>=3.22`
+- **GTK** `>=3.24`
 - **Go** `>=1.11`
 - **Meson** `>=0.48`
 
