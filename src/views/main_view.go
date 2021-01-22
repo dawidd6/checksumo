@@ -52,8 +52,9 @@ func (view *mainView) Activate(app *gtk.Application) {
 	view.CancelButton.Connect("clicked", presenter.StopHashing)
 	view.SettingsButton.Connect("clicked", NewSettingsView().Activate)
 	view.MainWindow.Connect("delete-event", func() {
-		settings.SavedWindowWidth(view.MainWindow.GetAllocatedWidth())
-		settings.SavedWindowHeight(view.MainWindow.GetAllocatedHeight())
+		width, height := view.MainWindow.GetSize()
+		settings.SavedWindowWidth(width)
+		settings.SavedWindowHeight(height)
 	})
 
 	// Show main window
