@@ -4,7 +4,8 @@ APP_ID = com.github.dawidd6.checksumo
 GOTK_TAG = gtk_3_22
 GO_FLAGS = -v -mod=vendor -tags=$(GOTK_TAG)
 POTFILES = \
-	data/checksumo.ui
+	ui/main_view.ui \
+	ui/settings_view.ui
 LANGUAGES = \
 	pl
 
@@ -12,7 +13,7 @@ build: build-resources
 	go build $(GO_FLAGS) -o $(APP) ./src
 
 build-resources:
-	glib-compile-resources --target=src/resources.h --generate-source data/$(APP).gresource.xml
+	glib-compile-resources --target=src/resources.h --generate-source ui/ui.gresource.xml
 
 ifdef DESTDIR
 build-schemas:

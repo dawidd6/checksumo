@@ -5,7 +5,6 @@ import (
 
 	"github.com/dawidd6/checksumo/src/settings"
 
-	"github.com/dawidd6/checksumo/src/constants"
 	"github.com/dawidd6/checksumo/src/utils"
 
 	"github.com/dawidd6/checksumo/src/presenters"
@@ -39,7 +38,7 @@ func NewMainView() MainView {
 
 func (view *mainView) Activate(app *gtk.Application) {
 	// Bind widgets
-	utils.BindWidgets(view, constants.UIResourcePath)
+	utils.BindWidgets(view, "/com/github/dawidd6/checksumo/ui/main_view.ui")
 
 	// Create presenter
 	presenter := presenters.NewMainPresenter(view)

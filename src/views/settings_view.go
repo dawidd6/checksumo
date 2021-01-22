@@ -1,7 +1,6 @@
 package views
 
 import (
-	"github.com/dawidd6/checksumo/src/constants"
 	"github.com/dawidd6/checksumo/src/settings"
 	"github.com/dawidd6/checksumo/src/utils"
 
@@ -24,7 +23,7 @@ func NewSettingsView() *settingsView {
 
 func (view *settingsView) Activate() {
 	// Bind widgets
-	utils.BindWidgets(view, constants.UIResourcePath)
+	utils.BindWidgets(view, "/com/github/dawidd6/checksumo/ui/settings_view.ui")
 
 	// Display current settings state
 	view.ShowNotificationsCheck.SetActive(settings.ShowNotifications())
