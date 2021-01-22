@@ -29,7 +29,7 @@ func (view *settingsView) Activate() {
 	view.RememberWindowSizeCheck.SetActive(settings.RememberWindowSize())
 
 	// Connect handlers to events
-	view.SaveButton.Connect("clicked", view.SettingsWindow.Hide)
+	view.SaveButton.Connect("clicked", view.SettingsWindow.Close)
 	view.ShowNotificationsCheck.Connect("toggled", func() {
 		settings.ShowNotifications(view.ShowNotificationsCheck.GetActive())
 	})
@@ -38,6 +38,5 @@ func (view *settingsView) Activate() {
 	})
 
 	// Show settings window
-	view.SettingsWindow.HideOnDelete()
 	view.SettingsWindow.Present()
 }

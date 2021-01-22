@@ -72,7 +72,7 @@ func (view *mainView) Activate(app *gtk.Application) {
 	bringUpAction := glib.SimpleActionNew("bring-up", nil)
 	bringUpAction.Connect("activate", view.MainWindow.Present)
 	quitAction := glib.SimpleActionNew("quit", nil)
-	quitAction.Connect("activate", app.Quit)
+	quitAction.Connect("activate", view.MainWindow.Close)
 
 	// Set keyboard shortcuts for actions
 	app.SetAccelsForAction("app.quit", []string{"<Ctrl>Q"})
