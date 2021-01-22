@@ -27,10 +27,10 @@ jobs:
       - name: Build project
         run: |
           meson build
-          ninja -C build
+          meson compile
       - name: Install software
         run: |
-          sudo ninja -C build install
+          sudo meson install -C build --no-rebuild
       - name: Run program
         run: |
           checksumo --help
