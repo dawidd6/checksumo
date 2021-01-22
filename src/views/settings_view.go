@@ -17,7 +17,7 @@ type settingsView struct {
 	RememberWindowPositionCheck *gtk.CheckButton
 }
 
-func NewSettingsView() *settingsView {
+func newSettingsView() *settingsView {
 	return &settingsView{}
 }
 
