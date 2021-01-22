@@ -13,6 +13,7 @@ type settingsView struct {
 	SettingsHeaderBar           *gtk.HeaderBar
 	SaveButton                  *gtk.Button
 	ShowNotificationsCheck      *gtk.CheckButton
+	RememberDirectoryCheck      *gtk.CheckButton
 	RememberWindowSizeCheck     *gtk.CheckButton
 	RememberWindowPositionCheck *gtk.CheckButton
 }
@@ -27,6 +28,7 @@ func (view *settingsView) Activate() {
 
 	// Display current settings state
 	view.ShowNotificationsCheck.SetActive(settings.ShowNotifications())
+	view.RememberDirectoryCheck.SetActive(settings.RememberDirectory())
 	view.RememberWindowSizeCheck.SetActive(settings.RememberWindowSize())
 	view.RememberWindowPositionCheck.SetActive(settings.RememberWindowPosition())
 
@@ -34,6 +36,9 @@ func (view *settingsView) Activate() {
 	view.SaveButton.Connect("clicked", view.SettingsWindow.Close)
 	view.ShowNotificationsCheck.Connect("toggled", func() {
 		settings.ShowNotifications(view.ShowNotificationsCheck.GetActive())
+	})
+	view.RememberDirectoryCheck.Connect("toggled", func() {
+		settings.RememberDirectory(view.RememberDirectoryCheck.GetActive())
 	})
 	view.RememberWindowSizeCheck.Connect("toggled", func() {
 		settings.RememberWindowSize(view.RememberWindowSizeCheck.GetActive())
