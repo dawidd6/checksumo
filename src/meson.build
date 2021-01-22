@@ -6,7 +6,11 @@ custom_target(
     build_by_default: true,
     build_always_stale: true,
     command: [
-        go_env, go, 'build', '-v', '-mod=vendor', '-o', '@OUTPUT@', meson.current_source_dir()
+        go_env, go, 'build',
+        '-ldflags',
+        '-X main.appID=@0@ -X main.localeDir=@1@'.format(meson.project_name(), get_option('prefix') / get_option('localedir')),
+        '-v', '-mod=vendor', '-o', '@OUTPUT@',
+        meson.current_source_dir()
     ],
     console: true,
     install: true,
