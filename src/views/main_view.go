@@ -49,52 +49,20 @@ func (view *mainView) Activate(app *gtk.Application) {
 	view.HashValueEntry.Connect("activate", presenter.StartHashing)
 	view.VerifyButton.Connect("clicked", presenter.StartHashing)
 	view.CancelButton.Connect("clicked", presenter.StopHashing)
-	view.SettingsButton.Connect("clicked", newSettingsView().activate)
-	view.MainWindow.Connect("delete-event", func() {
-		if settings.RememberDirectory() {
-			dir, _ := view.FileChooserButton.FileChooser.GetCurrentFolder()
-			settings.SavedDirectory(dir)
-		}
-		if settings.RememberWindowSize() {
-			width, height := view.MainWindow.GetSize()
-			settings.SavedWindowWidth(width)
-			settings.SavedWindowHeight(height)
-		}
-		if settings.RememberWindowPosition() {
-			x, y := view.MainWindow.GetPosition()
-			settings.SavedWindowPositionX(x)
-			settings.SavedWindowPositionY(y)
-		}
-	})
+	view.SettingsButton.Connect("clicked", newSettingsView().activate, app)
+	view.MainWindow.Connect("delete-event", view.onSave)
 
 	// Show main window
 	view.MainWindow.Present()
 
-	if settings.RememberDirectory() {
-		view.FileChooserButton.FileChooser.SetCurrentFolder(settings.SavedDirectory())
-	}
-
-	// Restore window size if preferred
-	if settings.RememberWindowSize() {
-		width := settings.SavedWindowWidth()
-		height := settings.SavedWindowHeight()
-		if width > 0 && height > 0 {
-			view.MainWindow.Resize(width, height)
-		}
-	}
-
-	// Restore window position if preferred
-	if settings.RememberWindowPosition() {
-		x := settings.SavedWindowPositionX()
-		y := settings.SavedWindowPositionY()
-		view.MainWindow.Move(x, y)
-	}
+	// Restore saved state
+	view.onRestore()
 
 	// Create actions
 	bringUpAction := glib.SimpleActionNew("bring-up", nil)
 	bringUpAction.Connect("activate", view.MainWindow.Present)
 	quitAction := glib.SimpleActionNew("quit", nil)
-	quitAction.Connect("activate", view.MainWindow.Close)
+	quitAction.Connect("activate", view.onClose)
 
 	// Set keyboard shortcuts for actions
 	app.SetAccelsForAction("app.quit", []string{"<Ctrl>Q"})
@@ -105,6 +73,49 @@ func (view *mainView) Activate(app *gtk.Application) {
 
 	// Add main window
 	app.AddWindow(view.MainWindow)
+}
+
+func (view *mainView) onClose() {
+	app, _ := view.MainWindow.GetApplication()
+	app.GetWindows().Foreach(func(win interface{}) {
+		win.(*gtk.Window).Close()
+	})
+}
+
+func (view *mainView) onSave() {
+	if settings.RememberDirectory() {
+		dir, _ := view.FileChooserButton.FileChooser.GetCurrentFolder()
+		settings.SavedDirectory(dir)
+	}
+	if settings.RememberWindowSize() {
+		width, height := view.MainWindow.GetSize()
+		settings.SavedWindowWidth(width)
+		settings.SavedWindowHeight(height)
+	}
+	if settings.RememberWindowPosition() {
+		x, y := view.MainWindow.GetPosition()
+		settings.SavedWindowPositionX(x)
+		settings.SavedWindowPositionY(y)
+	}
+}
+
+func (view *mainView) onRestore() {
+	if settings.RememberDirectory() {
+		dir := settings.SavedDirectory()
+		view.FileChooserButton.FileChooser.SetCurrentFolder(dir)
+	}
+	if settings.RememberWindowSize() {
+		width := settings.SavedWindowWidth()
+		height := settings.SavedWindowHeight()
+		if width > 0 && height > 0 {
+			view.MainWindow.Resize(width, height)
+		}
+	}
+	if settings.RememberWindowPosition() {
+		x := settings.SavedWindowPositionX()
+		y := settings.SavedWindowPositionY()
+		view.MainWindow.Move(x, y)
+	}
 }
 
 func (view *mainView) notify(title, body string) {

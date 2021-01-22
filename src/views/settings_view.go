@@ -21,7 +21,7 @@ func newSettingsView() *settingsView {
 	return &settingsView{}
 }
 
-func (view *settingsView) activate() {
+func (view *settingsView) activate(_ *gtk.Button, app *gtk.Application) {
 	// Bind widgets
 	utils.BindWidgets(view, "/com/github/dawidd6/checksumo/ui/settings_view.ui")
 
@@ -48,4 +48,7 @@ func (view *settingsView) activate() {
 
 	// Show settings window
 	view.SettingsWindow.Present()
+
+	// Add settings window
+	app.AddWindow(view.SettingsWindow)
 }
