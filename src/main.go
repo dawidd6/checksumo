@@ -30,7 +30,7 @@ func main() {
 
 	// Create app
 	app, _ := gtk.ApplicationNew(constants.AppID, glib.APPLICATION_FLAGS_NONE)
-	app.Connect("activate", views.New().Activate)
+	app.Connect("activate", views.NewMainView().Activate)
 
 	// Run app
 	os.Exit(app.Run(os.Args))
