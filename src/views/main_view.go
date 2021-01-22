@@ -52,6 +52,10 @@ func (view *mainView) Activate(app *gtk.Application) {
 	view.CancelButton.Connect("clicked", presenter.StopHashing)
 	view.SettingsButton.Connect("clicked", NewSettingsView().Activate)
 	view.MainWindow.Connect("delete-event", func() {
+		if settings.RememberDirectory() {
+			dir, _ := view.FileChooserButton.FileChooser.GetCurrentFolder()
+			settings.SavedDirectory(dir)
+		}
 		if settings.RememberWindowSize() {
 			width, height := view.MainWindow.GetSize()
 			settings.SavedWindowWidth(width)
@@ -66,6 +70,10 @@ func (view *mainView) Activate(app *gtk.Application) {
 
 	// Show main window
 	view.MainWindow.Present()
+
+	if settings.RememberDirectory() {
+		view.FileChooserButton.FileChooser.SetCurrentFolder(settings.SavedDirectory())
+	}
 
 	// Restore window size if preferred
 	if settings.RememberWindowSize() {
