@@ -7,7 +7,7 @@ import (
 	"github.com/gotk3/gotk3/glib"
 )
 
-type View interface {
+type MainView interface {
 	GetFile() string
 	GetHash() string
 	OnProcessStart()
@@ -19,19 +19,19 @@ type View interface {
 	OnFileOrHashSet(bool, string)
 }
 
-type Presenter struct {
-	view  View
-	model *models.Model
+type MainPresenter struct {
+	view  MainView
+	model *models.MainModel
 }
 
-func New(view View) *Presenter {
-	return &Presenter{
+func NewMainPresenter(view MainView) *MainPresenter {
+	return &MainPresenter{
 		view:  view,
-		model: models.New(),
+		model: models.NewMainModel(),
 	}
 }
 
-func (presenter *Presenter) setFileOrHash() {
+func (presenter *MainPresenter) setFileOrHash() {
 	// Detect hash type from provided hash
 	hashType := presenter.model.DetectType()
 	// Check if every needed information is provided
@@ -40,7 +40,7 @@ func (presenter *Presenter) setFileOrHash() {
 	presenter.view.OnFileOrHashSet(isReady, hashType)
 }
 
-func (presenter *Presenter) SetFile() {
+func (presenter *MainPresenter) SetFile() {
 	// Get file from view and set it in model
 	filePath := presenter.view.GetFile()
 	presenter.model.SetFile(filePath)
@@ -48,7 +48,7 @@ func (presenter *Presenter) SetFile() {
 	presenter.setFileOrHash()
 }
 
-func (presenter *Presenter) SetHash() {
+func (presenter *MainPresenter) SetHash() {
 	// Get hash from view and set it in model
 	hashValue := presenter.view.GetHash()
 	presenter.model.SetHash(hashValue)
@@ -56,12 +56,12 @@ func (presenter *Presenter) SetHash() {
 	presenter.setFileOrHash()
 }
 
-func (presenter *Presenter) StopHashing() {
+func (presenter *MainPresenter) StopHashing() {
 	// This essentially comes down to calling context.CancelFunc
 	presenter.model.StopHashing()
 }
 
-func (presenter *Presenter) StartHashing() {
+func (presenter *MainPresenter) StartHashing() {
 	// Check if ready
 	if !presenter.model.IsReady() {
 		return
