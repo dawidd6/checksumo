@@ -3,7 +3,7 @@ project('com.github.dawidd6.checksumo', 'c')
 gnome = import('gnome')
 i18n = import('i18n')
 
-dependency('gtk+-3.0', version : '>=3.22')
+dependency('gtk+-3.0', version : '>=3.24')
 dependency('glib-2.0')
 dependency('gio-2.0')
 
