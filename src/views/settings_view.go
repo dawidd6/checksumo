@@ -1,19 +1,19 @@
 package views
 
 import (
-	"github.com/dawidd6/checksumo/src/settings"
-
 	"github.com/dawidd6/checksumo/src/constants"
+	"github.com/dawidd6/checksumo/src/settings"
 	"github.com/dawidd6/checksumo/src/utils"
 
 	"github.com/gotk3/gotk3/gtk"
 )
 
 type settingsView struct {
-	SettingsWindow         *gtk.Window
-	SettingsHeaderBar      *gtk.HeaderBar
-	SaveButton             *gtk.Button
-	ShowNotificationsCheck *gtk.CheckButton
+	SettingsWindow          *gtk.Window
+	SettingsHeaderBar       *gtk.HeaderBar
+	SaveButton              *gtk.Button
+	ShowNotificationsCheck  *gtk.CheckButton
+	RememberWindowSizeCheck *gtk.CheckButton
 }
 
 func NewSettingsView() *settingsView {
@@ -26,17 +26,18 @@ func (view *settingsView) Activate() {
 
 	// Display current settings state
 	view.ShowNotificationsCheck.SetActive(settings.ShowNotifications())
+	view.RememberWindowSizeCheck.SetActive(settings.RememberWindowSize())
 
 	// Connect handlers to events
 	view.SaveButton.Connect("clicked", view.SettingsWindow.Hide)
-	view.ShowNotificationsCheck.Connect("toggled", view.onShowNotificationsToggle)
+	view.ShowNotificationsCheck.Connect("toggled", func() {
+		settings.ShowNotifications(view.ShowNotificationsCheck.GetActive())
+	})
+	view.RememberWindowSizeCheck.Connect("toggled", func() {
+		settings.RememberWindowSize(view.RememberWindowSizeCheck.GetActive())
+	})
 
 	// Show settings window
 	view.SettingsWindow.HideOnDelete()
 	view.SettingsWindow.Present()
-}
-
-func (view *settingsView) onShowNotificationsToggle() {
-	enabled := view.ShowNotificationsCheck.GetActive()
-	settings.ShowNotifications(enabled)
 }
