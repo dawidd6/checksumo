@@ -23,7 +23,7 @@ func newSettingsView() *settingsView {
 
 func (view *settingsView) activate(_ *gtk.Button, app *gtk.Application) {
 	// Bind widgets
-	utils.BindWidgets(view, "/com/github/dawidd6/checksumo/ui/settings_view.ui")
+	utils.BindWidgets(view, "/com/github/dawidd6/checksumo/settings_view.ui")
 
 	// Display current settings state
 	view.ShowNotificationsCheck.SetActive(settings.ShowNotifications())

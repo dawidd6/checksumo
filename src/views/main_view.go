@@ -38,7 +38,7 @@ func NewMainView() MainView {
 
 func (view *mainView) Activate(app *gtk.Application) {
 	// Bind widgets
-	utils.BindWidgets(view, "/com/github/dawidd6/checksumo/ui/main_view.ui")
+	utils.BindWidgets(view, "/com/github/dawidd6/checksumo/main_view.ui")
 
 	// Create presenter
 	presenter := presenters.NewMainPresenter(view)
