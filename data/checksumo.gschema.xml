@@ -4,5 +4,14 @@
         <key name='show-notifications' type='b'>
             <default>true</default>
         </key>
+        <key name='remember-window-size' type='b'>
+            <default>false</default>
+        </key>
+        <key name='saved-window-width' type='i'>
+            <default>0</default>
+        </key>
+        <key name='saved-window-height' type='i'>
+            <default>0</default>
+        </key>
     </schema>
 </schemalist>
