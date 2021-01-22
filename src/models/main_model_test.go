@@ -9,7 +9,7 @@ import (
 )
 
 func TestDetectType(t *testing.T) {
-	m := models.New()
+	m := models.NewMainModel()
 
 	cases := map[string]string{
 		"f3a306f40e4a313fb5a584d73b3dee8f":                                 "MD5",
