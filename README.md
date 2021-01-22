@@ -34,6 +34,7 @@ To build and run this software, one needs to have:
 
 - **GTK** `>=3.22`
 - **Go** `>=1.11`
+- **Meson** `>=0.48`
 
 then execute below commands:
 
