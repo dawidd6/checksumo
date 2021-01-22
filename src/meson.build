@@ -1,13 +1,14 @@
 go = find_program('go', required: true)
 go_gtk_tag = 'gtk_3_22'
-go_env = 'CGO_CFLAGS=-I' + meson.current_build_dir()
+go_env = 'CGO_CFLAGS=-I' + meson.current_build_dir() / '../ui'
 go_args = [
     '-v', '-mod=vendor', '-tags', go_gtk_tag
 ]
 
 custom_target(
-    meson.project_name(),
+    'build',
     build_by_default: true,
+    build_always_stale: true,
     command: [
         go_env, go, 'build', go_args, '-o', 'checksumo', meson.current_source_dir()
     ],
