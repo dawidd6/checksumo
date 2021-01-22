@@ -22,6 +22,8 @@ Supports cancellation of verification if desired.
 
 ![](data/screenshots/check4.png)
 
+![](data/screenshots/check5.png)
+
 ## Installation
 
 ### Flatpak
