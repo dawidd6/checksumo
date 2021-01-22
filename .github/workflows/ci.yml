@@ -27,7 +27,7 @@ jobs:
       - name: Build project
         run: |
           meson build
-          meson compile
+          ninja -C build
       - name: Install software
         run: |
           sudo meson install -C build --no-rebuild
