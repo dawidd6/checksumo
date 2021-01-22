@@ -1,4 +1,4 @@
-<img align="left" width="64" height="64" src="data/checksumo.svg">
+<img align="left" width="64" height="64" src="data/com.github.dawidd6.checksumo.svg">
 <h1>Checksumo</h1>
 
 <a href='https://flathub.org/apps/details/com.github.dawidd6.checksumo'><img width='240' alt='Download on Flathub' src='https://flathub.org/assets/badges/flathub-badge-en.png'/></a>
