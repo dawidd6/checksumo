@@ -14,15 +14,15 @@ Supports cancellation of verification if desired.
 
 ## Gallery
 
-![](data/screenshots/check1.png)
+![](data/screenshots/check1.png?raw=true)
 
-![](data/screenshots/check2.png)
+![](data/screenshots/check2.png?raw=true)
 
-![](data/screenshots/check3.png)
+![](data/screenshots/check3.png?raw=true)
 
-![](data/screenshots/check4.png)
+![](data/screenshots/check4.png?raw=true)
 
-![](data/screenshots/check5.png)
+![](data/screenshots/check5.png?raw=true)
 
 ## Installation
 
