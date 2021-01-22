@@ -42,7 +42,7 @@ func (view *mainView) Activate(app *gtk.Application) {
 	utils.BindWidgets(view, constants.UIResourcePath)
 
 	// Create presenter
-	presenter := presenters.New(view)
+	presenter := presenters.NewMainPresenter(view)
 
 	// Connect handlers to events
 	view.FileChooserButton.Connect("file-set", presenter.SetFile)
@@ -51,9 +51,22 @@ func (view *mainView) Activate(app *gtk.Application) {
 	view.VerifyButton.Connect("clicked", presenter.StartHashing)
 	view.CancelButton.Connect("clicked", presenter.StopHashing)
 	view.SettingsButton.Connect("clicked", NewSettingsView().Activate)
+	view.MainWindow.Connect("delete-event", func() {
+		settings.SavedWindowWidth(view.MainWindow.GetAllocatedWidth())
+		settings.SavedWindowHeight(view.MainWindow.GetAllocatedHeight())
+	})
 
 	// Show main window
 	view.MainWindow.Present()
+
+	// Restore window size if preferred
+	if settings.RememberWindowSize() {
+		width := settings.SavedWindowWidth()
+		height := settings.SavedWindowHeight()
+		if width > 0 && height > 0 {
+			view.MainWindow.Resize(width, height)
+		}
+	}
 
 	// Create actions
 	bringUpAction := glib.SimpleActionNew("bring-up", nil)
