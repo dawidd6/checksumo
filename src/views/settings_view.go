@@ -21,7 +21,7 @@ func NewSettingsView() *settingsView {
 	return &settingsView{}
 }
 
-func (view *settingsView) Activate() {
+func (view *settingsView) activate() {
 	// Bind widgets
 	utils.BindWidgets(view, "/com/github/dawidd6/checksumo/ui/settings_view.ui")
 
