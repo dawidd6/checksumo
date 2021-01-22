@@ -49,7 +49,7 @@ func (view *mainView) Activate(app *gtk.Application) {
 	view.HashValueEntry.Connect("activate", presenter.StartHashing)
 	view.VerifyButton.Connect("clicked", presenter.StartHashing)
 	view.CancelButton.Connect("clicked", presenter.StopHashing)
-	view.SettingsButton.Connect("clicked", NewSettingsView().activate)
+	view.SettingsButton.Connect("clicked", newSettingsView().activate)
 	view.MainWindow.Connect("delete-event", func() {
 		if settings.RememberDirectory() {
 			dir, _ := view.FileChooserButton.FileChooser.GetCurrentFolder()
