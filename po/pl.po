@@ -53,24 +53,24 @@ msgstr "Zapisz"
 
 #: ui/settings_view.ui:60
 msgid "Behavior"
-msgstr ""
+msgstr "Zachowanie"
 
 #: ui/settings_view.ui:73
 msgid "Show notifications when not in front"
-msgstr ""
+msgstr "Pokazuj powiadomienia, gdy okno nie jest z przodu"
 
 #: ui/settings_view.ui:87
 msgid "Remember directory"
-msgstr ""
+msgstr "Pamiętaj katalog"
 
 #: ui/settings_view.ui:104
 msgid "Window"
-msgstr ""
+msgstr "Okno"
 
 #: ui/settings_view.ui:117
 msgid "Remember window size"
-msgstr ""
+msgstr "Pamiętaj rozmiar okna"
 
 #: ui/settings_view.ui:131
 msgid "Remember window position"
-msgstr ""
+msgstr "Pamiętaj pozycję okna"
