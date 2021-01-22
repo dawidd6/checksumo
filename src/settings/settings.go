@@ -14,3 +14,29 @@ func ShowNotifications(value ...bool) bool {
 	}
 	return settings.SetBoolean(key, value[0])
 }
+
+func RememberWindowSize(value ...bool) bool {
+	key := "remember-window-size"
+	if value == nil {
+		return settings.GetBoolean(key)
+	}
+	return settings.SetBoolean(key, value[0])
+}
+
+func SavedWindowWidth(value ...int) int {
+	key := "saved-window-width"
+	if value == nil {
+		return settings.GetInt(key)
+	}
+	settings.SetInt(key, value[0])
+	return -1
+}
+
+func SavedWindowHeight(value ...int) int {
+	key := "saved-window-height"
+	if value == nil {
+		return settings.GetInt(key)
+	}
+	settings.SetInt(key, value[0])
+	return -1
+}
