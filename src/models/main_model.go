@@ -11,7 +11,7 @@ import (
 	"os"
 )
 
-type Model struct {
+type MainModel struct {
 	hasher hash.Hash
 
 	providedHash string
@@ -26,23 +26,23 @@ type Model struct {
 	cancelFunc context.CancelFunc
 }
 
-func New() *Model {
-	return &Model{}
+func NewMainModel() *MainModel {
+	return &MainModel{}
 }
 
-func (model *Model) SetFile(f string) {
+func (model *MainModel) SetFile(f string) {
 	model.filePath = f
 }
 
-func (model *Model) SetHash(h string) {
+func (model *MainModel) SetHash(h string) {
 	model.providedHash = h
 }
 
-func (model *Model) GetProgress() float64 {
+func (model *MainModel) GetProgress() float64 {
 	return float64(model.readBytes) / float64(model.totalBytes)
 }
 
-func (model *Model) DetectType() string {
+func (model *MainModel) DetectType() string {
 	switch len(model.providedHash) {
 	case md5.Size * 2:
 		model.hasher = md5.New()
@@ -61,19 +61,19 @@ func (model *Model) DetectType() string {
 	return model.hashType
 }
 
-func (model *Model) IsReady() bool {
+func (model *MainModel) IsReady() bool {
 	return model.hashType != "" && model.filePath != "" && model.providedHash != ""
 }
 
-func (model *Model) PrepareHashing() {
+func (model *MainModel) PrepareHashing() {
 	model.ctx, model.cancelFunc = context.WithCancel(context.Background())
 }
 
-func (model *Model) StopHashing() {
+func (model *MainModel) StopHashing() {
 	model.cancelFunc()
 }
 
-func (model *Model) StartHashing() (bool, error) {
+func (model *MainModel) StartHashing() (bool, error) {
 	// Cancel context on exit
 	defer model.cancelFunc()
 
