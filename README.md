@@ -39,7 +39,6 @@ To build and run this software, one needs to have:
 then execute below commands:
 
 ```shell script
-meson build --prefix=/usr/local
-ninja -C build
-sudo ninja -C build install
+meson build
+sudo meson install -C build
 ```
