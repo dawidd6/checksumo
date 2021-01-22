@@ -15,6 +15,14 @@ func ShowNotifications(value ...bool) bool {
 	return settings.SetBoolean(key, value[0])
 }
 
+func RememberWindowPosition(value ...bool) bool {
+	key := "remember-window-position"
+	if value == nil {
+		return settings.GetBoolean(key)
+	}
+	return settings.SetBoolean(key, value[0])
+}
+
 func RememberWindowSize(value ...bool) bool {
 	key := "remember-window-size"
 	if value == nil {
@@ -34,6 +42,24 @@ func SavedWindowWidth(value ...int) int {
 
 func SavedWindowHeight(value ...int) int {
 	key := "saved-window-height"
+	if value == nil {
+		return settings.GetInt(key)
+	}
+	settings.SetInt(key, value[0])
+	return -1
+}
+
+func SavedWindowPositionX(value ...int) int {
+	key := "saved-window-position-x"
+	if value == nil {
+		return settings.GetInt(key)
+	}
+	settings.SetInt(key, value[0])
+	return -1
+}
+
+func SavedWindowPositionY(value ...int) int {
+	key := "saved-window-position-y"
 	if value == nil {
 		return settings.GetInt(key)
 	}

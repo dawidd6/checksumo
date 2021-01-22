@@ -52,9 +52,16 @@ func (view *mainView) Activate(app *gtk.Application) {
 	view.CancelButton.Connect("clicked", presenter.StopHashing)
 	view.SettingsButton.Connect("clicked", NewSettingsView().Activate)
 	view.MainWindow.Connect("delete-event", func() {
-		width, height := view.MainWindow.GetSize()
-		settings.SavedWindowWidth(width)
-		settings.SavedWindowHeight(height)
+		if settings.RememberWindowSize() {
+			width, height := view.MainWindow.GetSize()
+			settings.SavedWindowWidth(width)
+			settings.SavedWindowHeight(height)
+		}
+		if settings.RememberWindowPosition() {
+			x, y := view.MainWindow.GetPosition()
+			settings.SavedWindowPositionX(x)
+			settings.SavedWindowPositionY(y)
+		}
 	})
 
 	// Show main window
@@ -67,6 +74,13 @@ func (view *mainView) Activate(app *gtk.Application) {
 		if width > 0 && height > 0 {
 			view.MainWindow.Resize(width, height)
 		}
+	}
+
+	// Restore window position if preferred
+	if settings.RememberWindowPosition() {
+		x := settings.SavedWindowPositionX()
+		y := settings.SavedWindowPositionY()
+		view.MainWindow.Move(x, y)
 	}
 
 	// Create actions

@@ -7,10 +7,19 @@
         <key name='remember-window-size' type='b'>
             <default>false</default>
         </key>
+        <key name='remember-window-position' type='b'>
+            <default>false</default>
+        </key>
         <key name='saved-window-width' type='i'>
             <default>0</default>
         </key>
         <key name='saved-window-height' type='i'>
+            <default>0</default>
+        </key>
+        <key name='saved-window-position-x' type='i'>
+            <default>0</default>
+        </key>
+        <key name='saved-window-position-y' type='i'>
             <default>0</default>
         </key>
     </schema>
