@@ -1,11 +1,14 @@
 package settings
 
 import (
-	"github.com/dawidd6/checksumo/src/constants"
 	"github.com/gotk3/gotk3/glib"
 )
 
-var settings = glib.SettingsNew(constants.AppID)
+var settings *glib.Settings
+
+func Init(appID string) {
+	settings = glib.SettingsNew(appID)
+}
 
 func ShowNotifications(value ...bool) bool {
 	key := "show-notifications"

@@ -10,27 +10,35 @@ import (
 	"os"
 	"unsafe"
 
-	"github.com/dawidd6/checksumo/src/constants"
+	"github.com/dawidd6/checksumo/src/settings"
 
 	"github.com/dawidd6/checksumo/src/views"
 	"github.com/gotk3/gotk3/glib"
 	"github.com/gotk3/gotk3/gtk"
 )
 
+var (
+	appID     string
+	localeDir string
+)
+
 func main() {
 	// Initialize i18n
-	glib.InitI18n(constants.LocaleDomain, constants.LocaleDir)
+	glib.InitI18n(appID, localeDir)
+
+	// Initialize settings
+	settings.Init(appID)
 
 	// Set program name to app ID,
 	// so DEs could recognize the app and desktop file
 	//
 	// This should be upstreamed to gotk3
-	appIDc := (*C.gchar)(C.CString(constants.AppID))
+	appIDc := (*C.gchar)(C.CString(appID))
 	C.g_set_prgname(appIDc)
 	C.free(unsafe.Pointer(appIDc))
 
 	// Create app
-	app, _ := gtk.ApplicationNew(constants.AppID, glib.APPLICATION_FLAGS_NONE)
+	app, _ := gtk.ApplicationNew(appID, glib.APPLICATION_FLAGS_NONE)
 	app.Connect("activate", views.NewMainView().Activate)
 
 	// Run app
