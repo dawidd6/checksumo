@@ -31,6 +31,23 @@ func RememberWindowSize(value ...bool) bool {
 	return settings.SetBoolean(key, value[0])
 }
 
+func RememberDirectory(value ...bool) bool {
+	key := "remember-directory"
+	if value == nil {
+		return settings.GetBoolean(key)
+	}
+	return settings.SetBoolean(key, value[0])
+}
+
+func SavedDirectory(value ...string) string {
+	key := "saved-directory"
+	if value == nil {
+		return settings.GetString(key)
+	}
+	settings.SetString(key, value[0])
+	return ""
+}
+
 func SavedWindowWidth(value ...int) int {
 	key := "saved-window-width"
 	if value == nil {
