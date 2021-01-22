@@ -8,7 +8,7 @@ custom_target(
     command: [
         go_env, go, 'build',
         '-ldflags',
-        '-X main.appID=@0@ -X main.localeDir=@1@'.format(meson.project_name(), get_option('prefix') / get_option('localedir')),
+        '-s -w -X main.appID=@0@ -X main.localeDir=@1@'.format(meson.project_name(), get_option('prefix') / get_option('localedir')),
         '-v', '-mod=vendor', '-o', '@OUTPUT@',
         meson.current_source_dir()
     ],
