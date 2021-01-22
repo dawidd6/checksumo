@@ -15,13 +15,14 @@ import (
 	"github.com/gotk3/gotk3/gtk"
 )
 
-type View interface {
+type MainView interface {
 	Activate(*gtk.Application)
 }
 
-type view struct {
+type mainView struct {
 	MainWindow        *gtk.ApplicationWindow
 	MainHeaderBar     *gtk.HeaderBar
+	SettingsButton    *gtk.Button
 	ButtonStack       *gtk.Stack
 	VerifyButton      *gtk.Button
 	CancelButton      *gtk.Button
@@ -32,22 +33,24 @@ type view struct {
 	ResultFailDialog  *gtk.MessageDialog
 }
 
-func New() View {
-	return &view{}
+func NewMainView() MainView {
+	return &mainView{}
 }
 
-func (view *view) Activate(app *gtk.Application) {
+func (view *mainView) Activate(app *gtk.Application) {
 	// Bind widgets
 	utils.BindWidgets(view, constants.UIResourcePath)
 
 	// Create presenter
 	presenter := presenters.New(view)
 
+	// Connect handlers to events
 	view.FileChooserButton.Connect("file-set", presenter.SetFile)
 	view.HashValueEntry.Connect("changed", presenter.SetHash)
 	view.HashValueEntry.Connect("activate", presenter.StartHashing)
 	view.VerifyButton.Connect("clicked", presenter.StartHashing)
 	view.CancelButton.Connect("clicked", presenter.StopHashing)
+	view.SettingsButton.Connect("clicked", NewSettingsView().Activate)
 
 	// Show main window
 	view.MainWindow.Present()
@@ -69,7 +72,7 @@ func (view *view) Activate(app *gtk.Application) {
 	app.AddWindow(view.MainWindow)
 }
 
-func (view *view) notify(title, body string) {
+func (view *mainView) notify(title, body string) {
 	notification := glib.NotificationNew(title)
 	notification.SetBody(body)
 	notification.SetDefaultAction("app.bring-up")
@@ -78,16 +81,16 @@ func (view *view) notify(title, body string) {
 	app.SendNotification(app.GetApplicationID(), notification)
 }
 
-func (view *view) GetFile() string {
+func (view *mainView) GetFile() string {
 	return view.FileChooserButton.GetFilename()
 }
 
-func (view *view) GetHash() string {
+func (view *mainView) GetHash() string {
 	hash, _ := view.HashValueEntry.GetText()
 	return hash
 }
 
-func (view *view) OnResultError(err error) {
+func (view *mainView) OnResultError(err error) {
 	if view.MainWindow.IsActive() || !settings.ShowNotifications() {
 		view.ErrorDialog.FormatSecondaryText(err.Error())
 		view.ErrorDialog.Run()
@@ -98,7 +101,7 @@ func (view *view) OnResultError(err error) {
 	}
 }
 
-func (view *view) OnResultSuccess() {
+func (view *mainView) OnResultSuccess() {
 	if view.MainWindow.IsActive() || !settings.ShowNotifications() {
 		view.ResultOkDialog.Run()
 		view.ResultOkDialog.Hide()
@@ -110,7 +113,7 @@ func (view *view) OnResultSuccess() {
 	}
 }
 
-func (view *view) OnResultFailure() {
+func (view *mainView) OnResultFailure() {
 	if view.MainWindow.IsActive() || !settings.ShowNotifications() {
 		view.ResultFailDialog.Run()
 		view.ResultFailDialog.Hide()
@@ -122,7 +125,7 @@ func (view *view) OnResultFailure() {
 	}
 }
 
-func (view *view) OnFileOrHashSet(isReady bool, hashType string) {
+func (view *mainView) OnFileOrHashSet(isReady bool, hashType string) {
 	if view.MainHeaderBar.GetSubtitle() != hashType {
 		view.MainHeaderBar.SetSubtitle(hashType)
 	}
@@ -134,17 +137,17 @@ func (view *view) OnFileOrHashSet(isReady bool, hashType string) {
 	}
 }
 
-func (view *view) OnProgressUpdate(progress float64) {
+func (view *mainView) OnProgressUpdate(progress float64) {
 	view.HashValueEntry.SetProgressFraction(progress)
 }
 
-func (view *view) OnProcessStart() {
+func (view *mainView) OnProcessStart() {
 	view.ButtonStack.SetVisibleChild(view.CancelButton)
 	view.FileChooserButton.SetSensitive(false)
 	view.HashValueEntry.SetSensitive(false)
 }
 
-func (view *view) OnProcessStop() {
+func (view *mainView) OnProcessStop() {
 	view.ButtonStack.SetVisibleChild(view.VerifyButton)
 	view.FileChooserButton.SetSensitive(true)
 	view.HashValueEntry.SetSensitive(true)
