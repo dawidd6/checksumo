@@ -23,14 +23,14 @@ jobs:
           key: ${{runner.os}}-go-build-${{hashFiles('**/*.go')}}
           restore-keys: ${{runner.os}}-go-build
       - name: Build project
-        run: make
+        run: meson build && ninja -C build
       - name: Test code
-        run: make test
+        run: ninja -C build test
       - name: Install software
-        run: sudo make install
+        run: sudo ninja -C build install
       - name: Run program
         run: checksumo --help
       - name: Upload binary
         uses: actions/upload-artifact@v2
         with:
-          path: checksumo
+          path: build/checksumo
